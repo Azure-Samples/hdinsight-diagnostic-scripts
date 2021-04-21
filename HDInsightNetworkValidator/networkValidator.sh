@@ -1,5 +1,7 @@
 #!/bin/bash
-#This script is to validate the network connectivity needed to successfully deploy your HDInsight cluster.
+<<COMMENT
+This script is to validate the network connectivity needed to successfully deploy your HDInsight cluster.
+COMMENT
 
 #Read the parameters file
 . params.txt
@@ -10,101 +12,208 @@ wget https://hdidiagscripts.blob.core.windows.net/data/HDInsightManagementIPs_$r
 #Loop for checking HDInsight Management IPs by region
 regionFile="HDInsightManagementIPs_$region.txt"
 
-##Read the file line-by-line using while loop
+<<COMMENT
+##This section tests the outbound connectivity to the HDInsight Management IPs for the region where the HDInsight cluster would be deployed. Need to check with HDInsight Control Plane Engineers on why outbound connections fail to some of the Management IPs. Until that is confirmed, DO NOT USE THIS SECTION!##
+
 while IFS= read -r line
 do
-  printf '****************************************************************************\n'
+  printf '*****************************************************************\n\n'
   echo "Testing connectivity to IP $line in $region"
-  ncResult="$(nc -vz -w 5 $line 443| grep '[tcp/https] succeeded!')"
-if [ ! -z "$ncResult" ]; then
-        echo "Connection to IP $line in $region was successful"
+  ncResult="$(nc -vz -w 5 $line 443 2>&1)"
+if grep -q "succeeded" <<< "$ncResult"; then
+  echo "Connection to IP $line in $region was successful"
 else
-        echo "Connection to IP $line in $region failed. Verify that any Network Security Group (NSG), User-Defined Routes (UDR), or firewall has the IP $line as allowed on port 443"
+  echo "Connection to IP $line in $region failed. Verify that any Network Security Group (NSG), User-Defined Routes (UDR), or firewall has the IP $line as allowed on port 443"
 fi
 
 done < "$regionFile"
+COMMENT
 
 #Validate Custom Ambari DB
-	echo "*********************************************************************"
+printf '*****************************************************************\n\n'
 if [ ! -z "$AMBARIDB" ]; then
 	echo "Validating connectivity to custom Ambari DB: $AMBARIDB.database.windows.net" 
 	AmbariErr="$(nc -vz -w 5 $AMBARIDB.database.windows.net 1433 2>&1)"
-	echo "Custom Ambari DB Results: $AmbariErr"
-	echo "************************************"
+	if grep -q "succeeded" <<< "$AmbariErr"; then
+	echo "Connection to custom Ambari DB $AMBARIDB successful"
+	printf '***************************************************************\n\n'
+	else
+	echo "Connection to custom Ambari DB $AMBARIDB failed"
+	printf '***************************************************************\n\n'
+    fi
 else
 	echo "No custom Ambari DB defined"
-	echo "*********************************************************************"
+	printf '***************************************************************\n\n'
 fi
 
 #Validate Custom Hive DB
 if [ ! -z "$HIVEDB" ]; then 
 	echo "Validating connectivity to custom Hive DB: $HIVEDB.database.windows.net" 
 	HiveErr="$(nc -vz -w 5 $HIVEDB.database.windows.net 1433 2>&1)"
-	echo "Custom Hive DB Results: $HiveErr"
-	echo "*********************************************************************"
+	if grep -q "succeeded" <<< "$HiveErr"; then
+	echo "Connection to custom Hive DB $HIVEDB successful"
+	printf '***************************************************************\n\n'
+	else
+	echo "Connection to custom Hive DB $HIVEDB failed"
+	printf '***************************************************************\n\n'
+    fi
 else
 	echo "No custom Hive DB defined"
-	echo "*********************************************************************"
+	printf '***************************************************************\n\n'
 fi
 
 #Validate Custom OOZIE DB
 if [ ! -z "$OOZIEDB" ]; then 
 	echo "Validating connectivity to custom OOZIE DB: $OOZIEDB.database.windows.net" 
 	OozieErr="$(nc -vz -w 5 $OOZIEDB.database.windows.net 1433 2>&1)"
-	echo "Custom Oozie DB Results: $OozieErr"
-	echo "*********************************************************************"
+	if grep -q "succeeded" <<< "$OozieErr"; then
+	echo "Connection to custom Oozie DB $OOZIEDB successful"
+	printf '***************************************************************\n\n'
+	else
+	echo "Connection to custom Ooze DB $OOZIEDB failed"
+	printf '***************************************************************\n\n'
+    fi
 else
 	echo "No custom Oozie DB defined"
-	echo "*********************************************************************"
+	printf '***************************************************************\n\n'
 fi
 
 #Validate Custom RANGER DB
 if [ ! -z "$RANGERDB" ]; then 
 	echo "Validating connectivity to custom Ranger DB: $RANGERDB.database.windows.net" 
 	RangerErr="$(nc -vz -w 5 $RANGERDB.database.windows.net 1433 2>&1)"
-	echo "Custom Ranger DB Results: $RangerErr"
-	echo "************************************"
+	if grep -q "succeeded" <<< "$RangerErr"; then
+	echo "Connection to custom Ranger DB $RANGERDB successful"
+	printf '***************************************************************\n\n'
+	else
+	echo "Connection to custom Ranger DB $RANGERDB failed"
+	printf '***************************************************************\n\n'
+    fi
 else
 	echo "No custom Ranger DB defined"
-	echo "************************************"
+	printf '***************************************************************\n\n'
 fi
-
-#Validate Internal Metastore DBs
-#Need a way to test connectivity to the Azure SQL DB endpoints used for internal Hive #and Ambari databases. Need to test ports 1433 and 11000 - 11999.
 
 #Validate Primary Storage Account:
 if [ ! -z "$PrimaryStorage" ]; then 
 	echo "Validating connectivity to Primary Storage Account: $PrimaryStorage" 
 	PrimStorErr="$(nslookup $PrimaryStorage 2>&1)"
-	echo "Primary Storage Connectivity Results: $PrimStorErr"
-	echo "************************************"
+	if grep -q "canonical name " <<< "$PrimStorErr"; then
+	echo "Connection to primary storage account $PrimaryStorage successful"
+	printf '***************************************************************\n\n'
+	else
+	echo "Connection to primary storage account $PrimaryStorage failed"
+	printf '***************************************************************\n\n'
+    fi
 else
-	echo "A primary storage account is required to create an HDInsight cluster"
-	echo "************************************"
+	echo "No primary storage found. A Primary storage acocunt is required to create an HDInsight cluster."
+	printf '***************************************************************\n\n'
 fi
 
 #Validate Secondary Storage Account:
 if [ ! -z "$SecondaryStorage" ]; then 
 	echo "Validating connectivity to Secondary Storage Account: $SecondaryStorage" 
 	SeconStorErr="$(nslookup $SecondaryStorage 2>&1)"
-	echo "Secondary Storage Connectivity Results: $SeconStorErr"
-	echo "************************************"
+	if grep -q "canonical name " <<< "$SeconStorErr"; then
+	echo "Connection to secondary storage account $SecondaryStorage successful"
+	printf '***************************************************************\n\n'
+	else
+	echo "Connection to secondary storage account $SecondaryStorage failed"
+	printf '***************************************************************\n\n'
+    fi
 else
-	echo "A Secondary storage account was not found"
-	echo "************************************"
+	echo "No secondary storage found."
+	printf '***************************************************************\n\n'
 fi
 
 #Validate KeyVault Connectivity:
 if [ ! -z "$KV1" ]; then 
 	echo "Validating connectivity to Azure Key Vault: $KV1" 
-	KV1Err="$(nc -vz -w 5 $KV1 2>&1)"
-	echo "Key Vault Connectivity Results: $KV1Err"
-	echo "************************************"
+	KV1Err="$(nc -vz -w 5 $KV1 443 2>&1)"
+	if grep -q "succeeded" <<< "$KV1Err"; then
+	echo "Connection to Key Vault $KV1 successful"
+	printf '***************************************************************\n\n'
+	else
+	echo "Connection to Key Vault $KV1 failed"
+	printf '***************************************************************\n\n'
+    fi
 else
-	echo "No KeyVault entry was"
-	echo "************************************"
+	echo "No Key Vault found."
+	printf '***************************************************************\n\n'
 fi
 
+#Validate Azure Management Connectivity:
+echo "Validating management.azure.com connectivity:" 
+	AzureMgmtErr="$(nc -vz -w 5 management.azure.com 443 2>&1)"
+if grep -q "succeeded" <<< "$AzureMgmtErr"; then
+  echo "Connection to management.azure.com succeeded"
+  printf '***************************************************************\n\n'
+else
+  echo "Connection to management.azure.com failed."
+  printf '***************************************************************\n\n'
+fi
+
+#Validate Microsoft OAuth endpoint Connectivity:
+echo "Validating login.windows.net connectivity" 
+	MSFTloginErr="$(nc -vz -w 5 login.windows.net 443 2>&1)"
+if grep -q "succeeded" <<< "$MSFTloginErr"; then
+  echo "Connection to login.windows.net succeeded"
+  printf '***************************************************************\n\n'
+else
+  echo "Connection to login.windows.net failed."
+  printf '***************************************************************\n\n'
+fi
+
+echo "Validating login.microsoftonline.com connectivity" 
+	MSFTonlineErr="$(nc -vz -w 5 login.microsoftonline.com 443 2>&1)"
+if grep -q "succeeded" <<< "$MSFTonlineErr"; then
+  echo "Connection to login.microsoftonline.com succeeded"
+  printf '***************************************************************\n\n'
+else
+  echo "Connection to login.microsoftonline.com failed."
+  printf '***************************************************************\n\n'
+fi
+
+#Validate Name Resolution
+echo "Validating connectivity to Azure Recursive Resolver(ARR) UDP port 443" 
+	ARRErr443="$(nc -vzu -w 5 168.63.129.16 443 2>&1)"
+if grep -q "succeeded" <<< "$ARRErr443"; then
+  echo "Connection to ARR UPD port 443 succeeded"
+  printf '***************************************************************\n\n'
+else
+  echo "Connection to ARR UPD port 443 failed."
+  printf '***************************************************************\n\n'
+fi
+
+echo "Validating connectivity to Azure Recursive Resolver(ARR) UDP port 53" 
+	ARRErr53="$(nc -vzu -w 5 168.63.129.16 53 2>&1)"
+if grep -q "succeeded" <<< "$ARRErr53"; then
+  echo "Connection to ARR UPD port 53 succeeded"
+  printf '***************************************************************\n\n'
+else
+  echo "Connection to ARR UPD port 53 failed."
+  printf '***************************************************************\n\n'
+fi
+
+echo "Validating connectivity to Azure Recursive Resolver(ARR) TCP port 443" 
+	ARRErr443="$(nc -vz -w 5 168.63.129.16 443 2>&1)"
+if grep -q "succeeded" <<< "$ARRErr443"; then
+  echo "Connection to ARR TCP port 443 succeeded"
+  printf '***************************************************************\n\n'
+else
+  echo "Connection to ARR TCP port 443 failed."
+  printf '***************************************************************\n\n'
+fi
+
+echo "Validating connectivity to Azure Recursive Resolver(ARR) TCP port 53" 
+	ARRErr53="$(nc -vz -w 5 168.63.129.16 53 2>&1)"
+if grep -q "succeeded" <<< "$ARRErr53"; then
+  echo "Connection to ARR UPD port 53 succeeded"
+  printf '***************************************************************\n\n'
+else
+  echo "Connection to ARR UPD port 53 failed."
+  printf '***************************************************************\n\n'
+fi
 
 
 #ESP cluster related checks - BEGIN
@@ -157,28 +266,3 @@ else
 	echo "Skipping ESP checks as DOMAIN value in params.txt is empty string"
 fi
 #ESP cluster related checks - END
-
-
-
-
-
-
-
-#Validate Azure Management Connectivity:
-echo "Validating management.azure.com Connectivity:" 
-	AzureMgmtErr="$(nc -vz -w 5 management.azure.com 443 2>&1)"
-	echo "Azure Management Connectivity Results: $AzureMgmtErr"
-	echo "************************************"
-
-#Validate Microsoft OAuth endpoint Connectivity:
-echo "Validating login.windows.net Connectivity" 
-	MSFTloginErr="$(nc -vz -w 5 login.windows.net 443 2>&1)"
-	echo "login.windows.net Connectivity Results: $MSFTloginErr"
-	echo "************************************"
-
-echo "Validating login.microsoftonline.com Connectivity" 
-	MSFTonlineErr="$(nc -vz -w 5 login.microsoftonline.com 443 2>&1)"
-	echo "login.microsoftonline.com Connectivity Results: $MSFTonlineErr"
-	echo "************************************"
-
-
