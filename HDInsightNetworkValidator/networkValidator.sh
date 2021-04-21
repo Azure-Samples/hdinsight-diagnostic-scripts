@@ -105,6 +105,61 @@ else
 	echo "************************************"
 fi
 
+
+
+#ESP cluster related checks - BEGIN
+if [ ! -z "$DOMAIN" ]; then 
+
+    LDAPS_TCP_PORT=636
+
+    echo "*********************************************************************"
+    echo -e "Starting ESP checks :\n"
+   
+	echo -e "a) Name resolution check for AAD-DS domain '$DOMAIN'"
+	cmdResult="$(nslookup $DOMAIN 2>&1)"
+    #echo -e "$cmdResult"
+    if [[ "$cmdResult" == *"server can't find"* ]]; then
+        echo -e "Name resolution to $DOMAIN failed. Error message:\n$cmdResult"
+        echo -e "------------------------------------\n"
+        echo -e "No further checks will be made as name resolution failed for $DOMAIN \n"
+        exit
+    else        
+        echo -e "Name resolution to $DOMAIN was successful"
+    fi	
+    echo -e "------------------------------------\n"
+
+	echo -e "b) Checking if ldaps://$DOMAIN:$LDAPS_TCP_PORT is up or not using telnet : "    
+    ncResult="$(nc -vz -w 5 $DOMAIN $LDAPS_TCP_PORT 2>&1)"
+    if [[ "$ncResult" == *"succeeded!"* ]]; then
+        echo -e "TCP connection check to $DOMAIN:$LDAPS_TCP_PORT was successful"
+    else
+        domainIPs="$(getent hosts $DOMAIN | awk '{ print $1 }')" ## AAD-DS DNS IPs
+        echo -e "TCP connection check to $DOMAIN:$LDAPS_TCP_PORT was not successful. Verify that any Network Security Group (NSG), User-Defined Routes (UDR), or firewall has the below IPs as allowed on TCP port 636 :\n$domainIPs"
+    fi
+    echo -e "------------------------------------\n"
+    
+    echo -e "c) Checking if AADDS is reachable with SSSD realm discover command"
+    DOMAIN_UPPERCASED=${DOMAIN^^}
+    cmdResult="$(sudo realm discover $DOMAIN_UPPERCASED 2>&1)"    
+
+    if [[ "$cmdResult" == *"server-software: active-directory"* ]]; then    
+        echo -e "Connected to AADDS successfully and gathered AADDS information as shown below :\n$cmdResult"
+    else        
+        echo -e "Cannot gather information from AADDS! Error message : $cmdResult"
+    fi
+    
+    echo "*********************************************************************"
+else
+	echo "Skipping ESP checks as DOMAIN value in params.txt is empty string"
+fi
+#ESP cluster related checks - END
+
+
+
+
+
+
+
 #Validate Azure Management Connectivity:
 echo "Validating management.azure.com Connectivity:" 
 	AzureMgmtErr="$(nc -vz -w 5 management.azure.com 443 2>&1)"
