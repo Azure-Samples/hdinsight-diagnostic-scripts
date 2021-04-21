@@ -1,15 +1,19 @@
-#Custom Databases
+# 1 - Cluster region name
+region="eastus2"
+
+# 2 - Storage Account(s)
+PrimaryStorage="nicjohnspark3hdistorage.blob.core.windows.net"
+SecondaryStorage="nicjohnambarihdistorage.blob.core.windows.net"
+
+#3 - Custom Databases
 AMBARIDB="nicjohnsqltest"
 HIVEDB="nicjohnsqltest"
 OOZIEDB=""
 RANGERDB=""
 
-#Storage Account(s)
-PrimaryStorage="nicjohnspark3hdistorage.blob.core.windows.net"
-SecondaryStorage="nicjohnambarihdistorage.blob.core.windows.net"
-
+#4 - Are you using BYOK ?
 #KeyVaults
 KV1=""
 
-#Cluster region name
-region="eastus2" 
+#5 - If this will be an ESP cluster, please fill the DOMAIN value below with your AADDS domain name
+DOMAIN=""
