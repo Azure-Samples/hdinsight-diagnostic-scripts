@@ -108,12 +108,16 @@ fi
 
 
 #ESP cluster related checks - BEGIN
-if [ ! -z "$DOMAIN" ]; then 
+if [ ! -z "$DOMAIN" ]; then
 
     LDAPS_TCP_PORT=636
 
     echo "*********************************************************************"
-    echo -e "Starting ESP checks :\n"
+    echo -e "Starting ESP checks :\nUpdating and installing some packages. Please wait ..."
+
+    cmdAptGetUpdate="$(sudo apt update 2>&1)"
+    cmdAptInstall="$(sudo apt install krb5-user samba sssd sssd-tools libnss-sss libpam-sss ntp ntpdate realmd adcli 2>&1)"
+    echo -e "Package update/intall completed!\n"
    
 	echo -e "a) Name resolution check for AAD-DS domain '$DOMAIN'"
 	cmdResult="$(nslookup $DOMAIN 2>&1)"
