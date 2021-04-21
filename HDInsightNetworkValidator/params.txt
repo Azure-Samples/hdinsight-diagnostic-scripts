@@ -9,7 +9,7 @@ PrimaryStorage="nicjohnspark3hdistorage.blob.core.windows.net"
 SecondaryStorage="nicjohnambarihdistorage.blob.core.windows.net"
 
 #KeyVaults
-KV1="<vault-name>.vault.azure.net"
+KV1=""
 
 #Cluster region name
 region="eastus2" 
