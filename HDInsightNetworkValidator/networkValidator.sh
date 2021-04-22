@@ -208,10 +208,10 @@ fi
 echo "Validating connectivity to Azure Recursive Resolver(ARR) TCP port 53" 
 	ARRErr53="$(nc -vz -w 5 168.63.129.16 53 2>&1)"
 if grep -q "succeeded" <<< "$ARRErr53"; then
-  echo "Connection to ARR UPD port 53 succeeded"
+  echo "Connection to ARR TCP port 53 succeeded"
   printf '***************************************************************\n\n'
 else
-  echo "Connection to ARR UPD port 53 failed."
+  echo "Connection to ARR TCP port 53 failed."
   printf '***************************************************************\n\n'
 fi
 
