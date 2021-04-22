@@ -14,7 +14,6 @@ regionFile="HDInsightManagementIPs_$region.txt"
 
 <<COMMENT
 ##This section tests the outbound connectivity to the HDInsight Management IPs for the region where the HDInsight cluster would be deployed. Need to check with HDInsight Control Plane Engineers on why outbound connections fail to some of the Management IPs. Until that is confirmed, DO NOT USE THIS SECTION!##
-
 while IFS= read -r line
 do
   printf '*****************************************************************\n\n'
@@ -25,7 +24,6 @@ if grep -q "succeeded" <<< "$ncResult"; then
 else
   echo "Connection to IP $line in $region failed. Verify that any Network Security Group (NSG), User-Defined Routes (UDR), or firewall has the IP $line as allowed on port 443"
 fi
-
 done < "$regionFile"
 COMMENT
 
@@ -38,7 +36,10 @@ if [ ! -z "$AMBARIDB" ]; then
 	echo "Connection to custom Ambari DB $AMBARIDB successful"
 	printf '***************************************************************\n\n'
 	else
-	echo "Connection to custom Ambari DB $AMBARIDB failed"
+	echo "Connection to custom Ambari DB $AMBARIDB failed. Since you are using a custom SQL server for Ambari, Oozie, Ranger and/or Hive metastores, then you need to allow the traffic to your own custom SQL Servers. 
+	Verify that any Network Security Group (NSG), User-Defined Routes (UDR), or firewall allows traffic on port 1433 in outbound direction.	
+	
+	One option is to configure Service Endpoints for SQL Server on the HDInsight virtual network. For more information see https://docs.microsoft.com/azure/azure-sql/database/vnet-service-endpoint-rule-overview. If you are using a firewall, configure a network rule in the Service Tags section for SQL that will allow you to log and audit SQL traffic. For more information see https://docs.microsoft.com/azure/hdinsight/hdinsight-restrict-outbound-traffic#configure-the-firewall-with-network-rules."
 	printf '***************************************************************\n\n'
     fi
 else
@@ -102,7 +103,7 @@ if [ ! -z "$PrimaryStorage" ]; then
 	echo "Connection to primary storage account $PrimaryStorage successful"
 	printf '***************************************************************\n\n'
 	else
-	echo "Connection to primary storage account $PrimaryStorage failed"
+	echo "Connection to primary storage account $PrimaryStorage failed. You need to allow the traffic to your primary storage account on port 443. One option is to configure Service Endpoints for storage on the HDInsight virtual network. For more information see https://docs.microsoft.com/azure/storage/common/storage-network-security#grant-access-from-a-virtual-network. If you are using a firewall, configure a network rule in the Target FQDNs section that will allow traffic to your storage account. For more information see https://docs.microsoft.com/azure/hdinsight/hdinsight-restrict-outbound-traffic#configure-the-firewall-with-application-rules."
 	printf '***************************************************************\n\n'
     fi
 else
@@ -118,7 +119,7 @@ if [ ! -z "$SecondaryStorage" ]; then
 	echo "Connection to secondary storage account $SecondaryStorage successful"
 	printf '***************************************************************\n\n'
 	else
-	echo "Connection to secondary storage account $SecondaryStorage failed"
+	echo "Connection to secondary storage account $SecondaryStorage failed. You need to allow the traffic to this storage account on port 443. One option is to configure Service Endpoints for storage on the HDInsight virtual network. For more information see https://docs.microsoft.com/azure/storage/common/storage-network-security#grant-access-from-a-virtual-network. If you are using a firewall, configure a network rule in the Target FQDNs section that will allow traffic to your storage account. For more information see https://docs.microsoft.com/azure/hdinsight/hdinsight-restrict-outbound-traffic#configure-the-firewall-with-application-rules."
 	printf '***************************************************************\n\n'
     fi
 else
@@ -134,7 +135,7 @@ if [ ! -z "$KV1" ]; then
 	echo "Connection to Key Vault $KV1 successful"
 	printf '***************************************************************\n\n'
 	else
-	echo "Connection to Key Vault $KV1 failed"
+	echo "Connection to Key Vault $KV1 failed. If you plan to use Azure Key Vault to store keys/secrets, you need to allow traffic on port 443. One option is to configure service tags for Azure Key Vault on the HDInsight virtual network. For more information see https://docs.microsoft.com/en-us/azure/virtual-network/service-tags-overview#available-service-tags."
 	printf '***************************************************************\n\n'
     fi
 else
@@ -232,8 +233,7 @@ if [ ! -z "$DOMAIN" ]; then
 	cmdResult="$(nslookup $DOMAIN 2>&1)"
     #echo -e "$cmdResult"
     if [[ "$cmdResult" == *"server can't find"* ]]; then
-        echo -e "Name resolution to $DOMAIN failed. Error message:\n$cmdResult\n"
-	echo -e "For more information see https://docs.microsoft.com/azure/hdinsight/domain-joined/apache-domain-joined-configure-using-azure-adds#network-configuration"
+        echo -e "Name resolution to $DOMAIN failed. Error message:\n$cmdResult"
         echo -e "------------------------------------\n"
         echo -e "No further checks will be made as name resolution failed for $DOMAIN \n"
         exit
@@ -248,7 +248,7 @@ if [ ! -z "$DOMAIN" ]; then
         echo -e "TCP connection check to $DOMAIN:$LDAPS_TCP_PORT was successful"
     else
         domainIPs="$(getent hosts $DOMAIN | awk '{ print $1 }')" ## AAD-DS DNS IPs
-        echo -e "TCP connection check to $DOMAIN:$LDAPS_TCP_PORT was not successful. For more information see https://docs.microsoft.com/azure/hdinsight/domain-joined/apache-domain-joined-configure-using-azure-adds#enable-azure-ad-ds"
+        echo -e "TCP connection check to $DOMAIN:$LDAPS_TCP_PORT was not successful. Verify that any Network Security Group (NSG), User-Defined Routes (UDR), or firewall has the below IPs as allowed on TCP port 636 :\n$domainIPs"
     fi
     echo -e "------------------------------------\n"
     
@@ -259,8 +259,7 @@ if [ ! -z "$DOMAIN" ]; then
     if [[ "$cmdResult" == *"server-software: active-directory"* ]]; then    
         echo -e "Connected to AADDS successfully and gathered AADDS information as shown below :\n$cmdResult"
     else        
-        echo -e "Cannot gather information from AADDS! Error message : $cmdResult\n"
-	echo -e "For more information see https://docs.microsoft.com/azure/hdinsight/domain-joined/apache-domain-joined-configure-using-azure-adds#enable-azure-ad-ds"
+        echo -e "Cannot gather information from AADDS! Error message : $cmdResult"
     fi
     
     echo "*********************************************************************"
