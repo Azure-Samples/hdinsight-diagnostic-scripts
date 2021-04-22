@@ -232,7 +232,8 @@ if [ ! -z "$DOMAIN" ]; then
 	cmdResult="$(nslookup $DOMAIN 2>&1)"
     #echo -e "$cmdResult"
     if [[ "$cmdResult" == *"server can't find"* ]]; then
-        echo -e "Name resolution to $DOMAIN failed. Error message:\n$cmdResult"
+        echo -e "Name resolution to $DOMAIN failed. Error message:\n$cmdResult\n"
+	echo -e "For more information see https://docs.microsoft.com/azure/hdinsight/domain-joined/apache-domain-joined-configure-using-azure-adds#network-configuration"
         echo -e "------------------------------------\n"
         echo -e "No further checks will be made as name resolution failed for $DOMAIN \n"
         exit
@@ -247,7 +248,7 @@ if [ ! -z "$DOMAIN" ]; then
         echo -e "TCP connection check to $DOMAIN:$LDAPS_TCP_PORT was successful"
     else
         domainIPs="$(getent hosts $DOMAIN | awk '{ print $1 }')" ## AAD-DS DNS IPs
-        echo -e "TCP connection check to $DOMAIN:$LDAPS_TCP_PORT was not successful. Verify that any Network Security Group (NSG), User-Defined Routes (UDR), or firewall has the below IPs as allowed on TCP port 636 :\n$domainIPs"
+        echo -e "TCP connection check to $DOMAIN:$LDAPS_TCP_PORT was not successful. For more information see https://docs.microsoft.com/azure/hdinsight/domain-joined/apache-domain-joined-configure-using-azure-adds#enable-azure-ad-ds"
     fi
     echo -e "------------------------------------\n"
     
@@ -258,7 +259,8 @@ if [ ! -z "$DOMAIN" ]; then
     if [[ "$cmdResult" == *"server-software: active-directory"* ]]; then    
         echo -e "Connected to AADDS successfully and gathered AADDS information as shown below :\n$cmdResult"
     else        
-        echo -e "Cannot gather information from AADDS! Error message : $cmdResult"
+        echo -e "Cannot gather information from AADDS! Error message : $cmdResult\n"
+	echo -e "For more information see https://docs.microsoft.com/azure/hdinsight/domain-joined/apache-domain-joined-configure-using-azure-adds#enable-azure-ad-ds"
     fi
     
     echo "*********************************************************************"
