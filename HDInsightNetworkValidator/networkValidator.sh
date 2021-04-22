@@ -178,20 +178,20 @@ fi
 echo "Validating connectivity to Azure Recursive Resolver(ARR) UDP port 443" 
 	ARRErr443="$(nc -vzu -w 5 168.63.129.16 443 2>&1)"
 if grep -q "succeeded" <<< "$ARRErr443"; then
-  echo "Connection to ARR UPD port 443 succeeded"
+  echo "Connection to ARR UDP port 443 succeeded"
   printf '***************************************************************\n\n'
 else
-  echo "Connection to ARR UPD port 443 failed."
+  echo "Connection to ARR UDP port 443 failed."
   printf '***************************************************************\n\n'
 fi
 
 echo "Validating connectivity to Azure Recursive Resolver(ARR) UDP port 53" 
 	ARRErr53="$(nc -vzu -w 5 168.63.129.16 53 2>&1)"
 if grep -q "succeeded" <<< "$ARRErr53"; then
-  echo "Connection to ARR UPD port 53 succeeded"
+  echo "Connection to ARR UDP port 53 succeeded"
   printf '***************************************************************\n\n'
 else
-  echo "Connection to ARR UPD port 53 failed."
+  echo "Connection to ARR UDP port 53 failed."
   printf '***************************************************************\n\n'
 fi
 
