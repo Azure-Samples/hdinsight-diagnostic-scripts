@@ -7,7 +7,7 @@ COMMENT
 . params.txt
 
 #Get the HDInsight Management IP files from Azure storage account
-wget https://hdidiagscripts.blob.core.windows.net/data/HDInsightManagementIPs_$region.txt
+wget -O HDInsightManagementIPs_$region.txt https://hdidiagscripts.blob.core.windows.net/data/HDInsightManagementIPs_$region.txt
 
 #Loop for checking HDInsight Management IPs by region
 regionFile="HDInsightManagementIPs_$region.txt"
@@ -225,7 +225,7 @@ if [ ! -z "$DOMAIN" ]; then
     echo -e "Starting ESP checks :\nUpdating and installing some packages. Please wait ..."
 
     cmdAptGetUpdate="$(sudo apt update 2>&1)"
-    cmdAptInstall="$(sudo apt install krb5-user samba sssd sssd-tools libnss-sss libpam-sss ntp ntpdate realmd adcli 2>&1)"
+    cmdAptInstall="$(sudo apt install realmd 2>&1)"
     echo -e "Package update/intall completed!\n"
    
 	echo -e "a) Name resolution check for AAD-DS domain '$DOMAIN'"
