@@ -8,6 +8,7 @@ from utils import *
 #x = nslCheck('www.bing.com')
 #print(x)
 
+#Dictionary to store the results of the checks we will made below
 errors = {}
 
 #Check if we are running on an HDInsight cluster node
@@ -60,7 +61,9 @@ if not(inHDInsightClusterNode()):
 else:
     #Running on an HDInsight cluster
 
-    #Do the imports for HDInsight python modules like hdinsight_common etc.
-    import re
-
+    #TODO ----
+    #Do the imports for HDInsight python modules like hdinsight_common etc.    
+    print("We are on the cluster")
+    
+    #TODO ---
     #Get the cluster manifest
