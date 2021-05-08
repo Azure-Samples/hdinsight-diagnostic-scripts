@@ -13,4 +13,4 @@ RANGERDB=""
 KV1=""
 
 #4 - If this will be an ESP cluster, please fill the DOMAIN value below with your AADDS domain name (ex AADDS.CONTOSO.COM)
-#DOMAIN="aadds.contoso.com"
+DOMAIN=""
