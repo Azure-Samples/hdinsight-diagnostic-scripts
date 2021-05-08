@@ -1,0 +1,16 @@
+# 1 - Storage Account(s) (ex teststorageaccount.blob.core.windows.net)
+PrimaryStorage=""
+SecondaryStorage=""
+
+#2 - Custom Database Azure SQL Server names (ex "myazuresqlservername.database.windows.net")
+AMBARIDB=""
+HIVEDB=""
+OOZIEDB=""
+RANGERDB=""
+
+#3 - Are you using BYOK ? (ex mykeyvault.vault.azure.net)
+#KeyVaults
+KV1=""
+
+#4 - If this will be an ESP cluster, please fill the DOMAIN value below with your AADDS domain name (ex AADDS.CONTOSO.COM)
+#DOMAIN="aadds.contoso.com"
