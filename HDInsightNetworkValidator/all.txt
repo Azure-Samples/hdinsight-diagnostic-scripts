@@ -1,0 +1,1 @@
+https://raw.githubusercontent.com/Azure-Samples/hdinsight-diagnostic-scripts/main/HDInsightNetworkValidator/networkValidator.py
