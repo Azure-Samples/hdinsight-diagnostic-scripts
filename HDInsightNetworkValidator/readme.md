@@ -1,7 +1,7 @@
 # HDInsight Pre-deployment Network Configuration Checks Script 
 
 ## Instructions
-1. In the same subnet that you are planning to create your HDInsight cluster, create an Azure Ubuntu 18.04 Linux VM in B1mS VM size or better
+1. In the same subnet that you are planning to create your HDInsight cluster, create an Azure Ubuntu 18.04 Linux VM in B1s VM size or better
 2. SSH into your VM
 3. Copy all the files from this repo into any folder with the command below
 
