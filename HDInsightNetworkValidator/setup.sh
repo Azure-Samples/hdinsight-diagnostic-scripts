@@ -1,4 +1,5 @@
 #!/bin/bash
 
 sudo apt update
-sudo apt install python-pip requests -y
+sudo apt install python-pip -y
+sudo pip install requests
