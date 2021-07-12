@@ -88,9 +88,8 @@ After creating the VM, you need to follow the steps below :
 sudo ./HDInsightNetworkValidator.py
 
 ### Not Supported:
-1. If you are using a NVA (Network Virtual Appliance) and not Azure Firewall
-2. "Outbound" HDInsight cluster
-3. "Privatelink" enabled HDInsight cluster
+1. If you are using an NVA (Network Virtual Appliance) other than Azure Firewall
+2. <a href="https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-private-link">"Private Link" enabled HDInsight cluster</a>
 
 ## Troubleshooting:
 <li> I'm getting error when running "./setup.sh"<br>
@@ -100,25 +99,25 @@ As we don't want HNV tool itself to go thorugh your proxy server, please don't f
 
 ## How it works :
 It consists of 4 parts:<br>
-PART 1 - Gathering Information
-  Get the name of the current diagnostic VM  
-  Get the Region/Location, Private IP, DNS settings, VNet/Subnet of the diagnostic VM
-  Check the NSG rules in the subnet
-  Get the storage accounts and does the checks below : 
-    Check if "Secure Transfer Required" is set to "True"
-    Check if you are using storage firewall and if you are, checks if storage is configured for the current VNet to access
-  Create a Network Watcher in the region
-    Check what is the NextHop set for 8.8.8.8
-      If nexthop is set to "Internet", understands that you are not using Azure Firewall or another NVA
-      if nexthop is set to "VirtualAppliance", it gets this Private IP that it's set for nexthop and enumarates Azure Firewalls in the subscription. If it finds it, gets the Azure Firewall resource.
-       As you are using a firewall/NVA, gets your UDR
-       If it's Azure Firewall checks Application Rule Collections and Network Rule Collections
+#### PART 1 - Gathering Information
+  - Get the name of the current diagnostic VM  
+  - Get the Region/Location, Private IP, DNS settings, VNet/Subnet of the diagnostic VM
+  - Check the NSG rules in the subnet
+  - Get the storage accounts and does the checks below : 
+    - Check if "Secure Transfer Required" is set to "True"
+    - Check if you are using storage firewall and if you are, checks if storage is configured for the current VNet to access
+  - Create a Network Watcher in the region
+  - Check what is the NextHop set for 8.8.8.8
+    - If nexthop is set to "Internet", understands that you are not using Azure Firewall or another NVA
+    - if nexthop is set to "VirtualAppliance", it gets this Private IP that it's set for nexthop and enumarates Azure Firewalls in the subscription. If it finds it, gets the Azure Firewall resource.
+       - As you are using a firewall/NVA, gets your UDR
+       - If it's Azure Firewall checks Application Rule Collections and Network Rule Collections
 
-PART 2 - Add Validations:
+#### PART 2 - Add Validations:
   In this part, tool adds the necessary inbound sources, which are HDInsight Management Endpoints, and outbound destinations to its list depending on what's obtained in the previous part.
 
-PART 3 - Execute the validations:   
+#### PART 3 - Execute the validations:   
   Tool actually executes the validations in the list in Part 2. It uses "nc" command for the outbound validation executions and network watcher's IpFlowVerify tool for inbound validation executions.
 
-SUMMARY - Results:
+#### SUMMARY - Results:
   Shows the results
