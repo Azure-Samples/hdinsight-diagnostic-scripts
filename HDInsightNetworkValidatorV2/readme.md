@@ -29,9 +29,9 @@ You haven't created your HDInsight cluster yet and you want to do pre-validation
    <li>SECONDARY_STORAGE : Secondary storage acount name if you will use. If not, leave empty
    <li>KAFKA_REST_PROXY : If you are going to create a <a href="https://docs.microsoft.com/en-us/azure/hdinsight/kafka/rest-proxy">Kafka Rest Proxy enabled Kafka cluster</a>, change it to "True", else leave it as "False"
    <li>AMBARIDB/HIVEDB/OOZIEDB : Azure SQL Server names for your custom AMBARIDB/HIVEDB/OOZIEDB servers. If you are going to use default AMBARIDB/HIVEDB/OOZIEDB metastore supplied by HDInsight, leave it empty
-   <li>KV1 : If you are going to use Bring Your Own Key (BYOK), put your Azure KeyVault name here . If not, leave it empty
+   <li>KV1 : If you are going to use <a href="https://docs.microsoft.com/en-us/azure/hdinsight/disk-encryption">Bring Your Own Key (BYOK)</a>, put your Azure KeyVault name here . If not, leave it empty
    
-   <br>If you are going to use Enterprise Security Pack (ESP):
+   <br>If you are going to use <a href="https://docs.microsoft.com/en-us/azure/hdinsight/domain-joined/hdinsight-security-overview">Enterprise Security Pack (ESP)</a>:
     <li>AADDS_DOMAIN : Your AAD-DS domain name. Leave it empty if you won't use ESP
     RANGERDB : Azure SQL Server name for your custom RangerDB server. If you are going to use default Ranger DB, leave it empty
 
