@@ -1,5 +1,5 @@
 DRAFT
-# HDInsight Network Validator v2.0
+# HDInsight Network Validator (a.k.a HNV) v2.0
 
 ## Table of Contents
 <li> What does it do ?
