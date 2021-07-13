@@ -91,7 +91,7 @@ After creating the VM, you need to follow the steps below :
     RANGERDB : Azure SQL Server name for your custom RangerDB server. If you are going to use default Ranger DB, leave it empty
 
 #### For <u>Scenario B (You already have your HDInsight cluster created and want to validate your network settings)</u>:
-You need to enter CLUSTER_DNS_NAME in params.conf file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file. 
+- You need to enter CLUSTER_DNS_NAME in params.conf file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file. 
 P.S. : Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
 ### 5 - Run HNV
