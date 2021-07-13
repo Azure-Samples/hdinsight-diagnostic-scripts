@@ -20,13 +20,13 @@ HDInsight Network Validator (a.k.a HNV) is a Python 3.x script checks these sett
 
 - #### <u>Scenario B - Already created your HDInsight cluster and want to validate your network settings</u>
   After you created your HDInsight cluster and have started using, it's possible that your network settings might have changed by you or someone else. You may have various problems in various scenarios when working with your cluster because of those "unknown" changes. You can use HNV to find those "unknown" changes to fix.
-  For this scenario, tool expects you to supply the CLUSTER_DNS_NAME in params.conf file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file.<br> 
+  For this scenario, tool expects you to supply the CLUSTER_DNS_NAME in params.conf file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file.<br> 
   P.S.: Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
 For both scenario A and B, HNV checks the below components if they're configured correctly for Azure HDInsight or not:
-1 - Network Security Group (NSG) in the subnet
-2 - Using Azure Firewall and User Defined Route (UDR)
-3 - Using non-Azure Firewall Networking Virtual Appliance (NVA) and User Defined Route : Although tool can obtain the firewall rules and checks if you are using Azure Firewall, it won't be able to gather firewall rules from an NVA other than Azure Firewall. But the tool still will do inbound/outbound checks in Part 2
+1. Network Security Group (NSG) in the subnet
+2. Using Azure Firewall and User Defined Route (UDR)
+3. Using non-Azure Firewall Networking Virtual Appliance (NVA) and User Defined Route : Although tool can obtain the firewall rules and checks if you are using Azure Firewall, it won't be able to gather firewall rules from an NVA other than Azure Firewall. But the tool still will do inbound/outbound checks in Part 2
 
 ## Requirements:
 <li>HNV requires you to create an <a href="https://portal.azure.com/?feature.customportal=false#create/Canonical.UbuntuServer1804LTS-ARM">Ubuntu Server 18.04 LTS Azure Linux VM</a> in the subnet that you are planning to create the HDInsight cluster, or the subnet that you used for your HDInsight cluster if you've created your HDInsight cluster already. Also, VM must be created in the same region as your HDInsight cluster. 
@@ -78,11 +78,11 @@ After creating the VM, you need to follow the steps below :
 
 ### 4 - Edit conf/params.conf configuration file with a text editor (like Vi, Nano etc)
 #### For <u>Scenario A (Before creating an HDInsight cluster)</u>, tool expects you to supply the values to the parameters below in conf/params.conf file:
-  - VM_RG_NAME : Resource Group name you have placed VM in
+  - VM_RG_NAME : Resource Group name of the Ubuntu VM
   - PRIMARY_STORAGE : Primary storage acount name (without .blob.core.windows.net , .dfs.core.windows.net etc).
-  - SECONDARY_STORAGE : Secondary storage acount name if you will use. If not, leave empty
-  - KAFKA_REST_PROXY : If you are going to create a <a href="https://docs.microsoft.com/en-us/azure/hdinsight/kafka/rest-proxy">Kafka Rest Proxy enabled Kafka cluster</a>, change it to "True", else leave it as "False"
+  - SECONDARY_STORAGE : Secondary storage acount name if you will use. If not, leave empty  
   - AMBARIDB/HIVEDB/OOZIEDB : Azure SQL Server names for your custom AMBARIDB/HIVEDB/OOZIEDB servers. If you are going to use default AMBARIDB/HIVEDB/OOZIEDB metastore supplied by HDInsight, leave it empty
+  - KAFKA_REST_PROXY : If you are going to create a <a href="https://docs.microsoft.com/en-us/azure/hdinsight/kafka/rest-proxy">Kafka Rest Proxy enabled Kafka cluster</a>, change it to "True", else leave it as "False"
   - KV1 : If you are going to use <a href="https://docs.microsoft.com/en-us/azure/hdinsight/disk-encryption">Bring Your Own Key (BYOK)</a>, put your Azure KeyVault name here . If not, leave it empty
    
    If you are going to use <a href="https://docs.microsoft.com/en-us/azure/hdinsight/domain-joined/hdinsight-security-overview">Enterprise Security Pack (ESP)</a>:
@@ -90,7 +90,8 @@ After creating the VM, you need to follow the steps below :
   - AADDS_DOMAIN : Your AAD-DS domain name. Leave it empty if you won't use ESP
     RANGERDB : Azure SQL Server name for your custom RangerDB server. If you are going to use default Ranger DB, leave it empty
 
-#### For <u>Scenario B (You already have your HDInsight cluster created and want to validate your network settings)</u>, you need to enter CLUSTER_DNS_NAME in params.conf file only. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file. Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
+#### For <u>Scenario B (You already have your HDInsight cluster created and want to validate your network settings)</u>, you need to enter CLUSTER_DNS_NAME in params.conf file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file. 
+P.S. : Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
 ### 5 - Run HNV
 + Now you can use the tool with the command below
