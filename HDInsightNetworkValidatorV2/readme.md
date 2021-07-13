@@ -76,7 +76,7 @@ After creating the VM, you need to follow the steps below :
   sudo ./setup.sh
   ```
 
-### 4 - Edit conf/params.conf configuration file with a text editor (like Vi, Nano etc)
+### 4 - Edit `conf/params.conf` configuration file with a text editor (like Vi, Nano etc)
 #### For <u>Scenario A (Before creating an HDInsight cluster)</u>, tool expects you to supply the values to the parameters below in conf/params.conf file:
   - VM_RG_NAME : Resource Group name of the Ubuntu VM
   - PRIMARY_STORAGE : Primary storage acount name (without .blob.core.windows.net , .dfs.core.windows.net etc).
