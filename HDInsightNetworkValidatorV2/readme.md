@@ -16,11 +16,11 @@ HDInsight Network Validator (a.k.a HNV) is a Python 3.x script checks these sett
 ### HNV supports the two main scenarios below:
 
 - #### <u>Scenario A : Before creating an HDInsight cluster</u>
-  You haven't created your HDInsight cluster yet and you want to do a pre-validation. For this scenario, tool expects you to supply the values to the parameters in conf/params.conf file. Check "Usage" part below for details
+  You haven't created your HDInsight cluster yet and you want to do a pre-validation. For this scenario, tool expects you to supply the values to the parameters in `config/params.conf` file. Check "Usage" part below for details
 
 - #### <u>Scenario B - Already created your HDInsight cluster and want to validate your network settings</u>
   After you created your HDInsight cluster and have started using, it's possible that your network settings might have changed by you or someone else. You may have various problems in various scenarios when working with your cluster because of those "unknown" changes. You can use HNV to find those "unknown" changes to fix.
-  For this scenario, tool expects you to supply the CLUSTER_DNS_NAME in params.conf file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file.<br> 
+  For this scenario, tool expects you to supply the CLUSTER_DNS_NAME in `config/params.conf` file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the `config/params.conf` file.<br> 
   P.S.: Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
 For both scenario A and B, HNV checks the below components if they're configured correctly for Azure HDInsight or not:
@@ -76,8 +76,8 @@ After creating the VM, you need to follow the steps below :
   sudo ./setup.sh
   ```
 
-### 4 - Edit `conf/params.conf` configuration file with a text editor (like Vi, Nano etc)
-#### For <u>Scenario A (Before creating an HDInsight cluster)</u>, tool expects you to supply the values to the parameters below in conf/params.conf file:
+### 4 - Edit `config/params.conf` configuration file with a text editor (like Vi, Nano etc)
+#### For <u>Scenario A (Before creating an HDInsight cluster)</u>, tool expects you to supply the values to the parameters below in `config/params.conf` file:
   - VM_RG_NAME : Resource Group name of the Ubuntu VM
   - PRIMARY_STORAGE : Primary storage acount name (without .blob.core.windows.net , .dfs.core.windows.net etc).
   - SECONDARY_STORAGE : Secondary storage acount name if you will use. If not, leave empty  
@@ -91,7 +91,7 @@ After creating the VM, you need to follow the steps below :
     RANGERDB : Azure SQL Server name for your custom RangerDB server. If you are going to use default Ranger DB, leave it empty
 
 #### For <u>Scenario B (You already have your HDInsight cluster created and want to validate your network settings)</u>:
-- You need to enter CLUSTER_DNS_NAME in params.conf file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file. 
+- You need to enter CLUSTER_DNS_NAME in `config/params.conf` file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the `config/params.conf` file. 
 P.S. : Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
 ### 5 - Run HNV
