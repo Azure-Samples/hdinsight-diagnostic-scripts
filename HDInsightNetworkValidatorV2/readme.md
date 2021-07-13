@@ -1,4 +1,3 @@
-DRAFT
 # HDInsight Network Validator (a.k.a HNV) v2.0
 
 ## Table of Contents
@@ -21,7 +20,8 @@ HDInsight Network Validator (a.k.a HNV) is a Python 3.x script checks these sett
 
 - #### <u>Scenario B - Already created your HDInsight cluster and want to validate your network settings</u>
   After you created your HDInsight cluster and have started using, it's possible that your network settings might have changed by you or someone else. You may have various problems in various scenarios when working with your cluster because of those "unknown" changes. You can use HNV to find those "unknown" changes to fix.
-  For this scenario, tool expects you to supply the CLUSTER_DNS_NAME in params.conf file only. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file. Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
+  For this scenario, tool expects you to supply the CLUSTER_DNS_NAME in params.conf file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the params.conf file.<br> 
+  P.S.: Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
 For both scenario A and B, HNV checks the below components if they're configured correctly for Azure HDInsight or not:
 1 - Network Security Group (NSG) in the subnet
