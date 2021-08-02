@@ -1,16 +1,16 @@
 # HDInsight Network Validator (a.k.a HNV) v2.0
 
 ## Table of Contents
-<li> What does it do ?
-<li> Requirements
-<li> Usage
-<li> Not supported scenarios
-<li> Limitations
-<li> Troubleshooting
-<li> How it works ?
+<li> <a href="#what">What does it do</a> ?
+<li> <a href="#req">Requirements</a>
+<li> <a href="#usage">Usage</a>
+<li> <a href="#notsupported">Not supported scenarios</a>
+<li> <a href="#limitations">Limitations</a>
+<li> <a href="#ts">Troubleshooting</a>
+<li> <a href="#how">How it works ?</a>
 <br><br>
 
-## What does it do ?
+## <a id="what"></a>What does it do ?
 Creating an HDInsight cluster in a complex networking environment involving firewall, user-defined routes etc. like networking components requires configuring multiple settings properly. HDInsight cluster creation can fail if your network is not configured properly.<br>
 HDInsight Network Validator (a.k.a HNV) is a Python 3.x script which is checking your networking configuration and reporting back if your network is properly configured to create and use an HDInsight cluster or not.
 <br>
@@ -33,7 +33,7 @@ For both scenarios A and B, HNV checks the below components if they're configure
 3. Using non-Azure Firewall Networking Virtual Appliance (NVA) and User Defined Route:<br>
 Although tool can obtain the firewall rules and checks if you are using Azure Firewall, it won't be able to gather firewall rules from an NVA other than Azure Firewall. But the tool still will do inbound/outbound connections checks in Part B.
 
-## Requirements:
+## <a id="req"></a>Requirements:
 <li>HNV requires you to create an <a href="https://portal.azure.com/?feature.customportal=false#create/Canonical.UbuntuServer1804LTS-ARM">Ubuntu Server 18.04 LTS Azure Linux VM</a> in the subnet that you are planning to create the HDInsight cluster, or the subnet that you used for your HDInsight cluster if you've created your HDInsight cluster already. Also, VM must be created in the same region as your HDInsight cluster. 
 You can use as low as a B1s (1G RAM, 1 vCore) for the VM size or bigger. When you are done with HNV, don't forget to delete this VM. If you are planning to use it again, you may want to "Stop" the VM to avoid charges.
 <li>You will need to create a <a href="https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python#authentication-example-using-a-service-principal">Azure Service Principal</a> for the tool to access resources in your subscription
@@ -44,7 +44,7 @@ You can use as low as a B1s (1G RAM, 1 vCore) for the VM size or bigger. When yo
 
 
 
-## Usage:
+## <a id="usage"></a>Usage:
 ### 1 - Create "Service Principal": <br>
 You will need to create a "Service Principal" following steps below (or by referring  <a href="https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python">here</a> ) : 
  - Browse to Azure Cloud Shell in your browser https://shell.azure.com/bash
@@ -105,21 +105,21 @@ P.S. : Don't forget to remove all those after you're done using HNV! Better you 
 sudo ./HDInsightNetworkValidator.py
 ```
 
-## Not Supported:
+## <a id="notsupported"></a>Not Supported:
 Scenarios below are note supported : 
 1. <a href="https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-private-link">"Private Link" enabled HDInsight cluster</a> scenario is not supported.
 
-## Limitations : 
+## <a id="limitations"></a>Limitations : 
 1. If you are using an NVA (Network Virtual Appliance) other than Azure Firewall : <br> HNV can obtain the firewall rules if you are using Azure Firewall and can check those rules, but it won't be able to gather firewall rules from any other NVA than Azure Firewall.
 But the tool still will do inbound/outbound connections checks in Part B, meaning that you still can use the tool to find out what rules are missing and you will be able to ask your NVA admin to add those to your NVA.
 
-## Troubleshooting:
+## <a id="ts"></a>Troubleshooting:
 <li> Receiving error when running "./setup.sh"<br>
 setup.sh installs a few packages with Ubuntu's built-in "apt" package manager and also installs Python libraries with pip. It's possible that your network is blocking traffic to the internet for apt and pip to install packages and libraries. <br>
 You might ask your network admin to supply a proxy server that you can use accessing internet via a proxy server. You may refer to https://askubuntu.com/questions/257290/configure-proxy-for-apt for further details on how to configure apt and/or other tools to work with your proxy server.<br>
 P.S. : Please don't forget to remove this proxy server setting after setup.sh successfully installed the python libraries with pip, as we don't want HNV tool itself to go through your proxy server when making networking checks.
 
-## How it works :
+## <a id="how"></a>How it works :
 It consists of 4 parts:<br>
 #### PART A - Gathering Information
   - Get the name of the current diagnostic VM  
