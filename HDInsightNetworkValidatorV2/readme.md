@@ -5,13 +5,16 @@
 <li> Requirements
 <li> Usage
 <li> Not supported scenarios
-<li> How it works ?
+<li> Limitations
 <li> Troubleshooting
+<li> How it works ?
 <br><br>
 
 ## What does it do ?
-Creating an HDInsight cluster in a complex networking environment that involves firewall, UDR etc. requires configuring multiple settings properly. HDInsight cluster creation can fail if your network is not configured properly.<br>
-HDInsight Network Validator (a.k.a HNV) is a Python 3.x script checks these settings and reports back if your network is properly configured to create and use an HDInsight cluster or not.
+Creating an HDInsight cluster in a complex networking environment involving firewall, user-defined routes etc. like networking components requires configuring multiple settings properly. HDInsight cluster creation can fail if your network is not configured properly.<br>
+HDInsight Network Validator (a.k.a HNV) is a Python 3.x script which is checking your networking configuration and reporting back if your network is properly configured to create and use an HDInsight cluster or not.
+<br>
+Please note that HNV does not make any changes in any of your configuration. Instead, it will report what you should fix to you.
 
 ### HNV supports the two main scenarios below:
 
@@ -19,20 +22,22 @@ HDInsight Network Validator (a.k.a HNV) is a Python 3.x script checks these sett
   You haven't created your HDInsight cluster yet and you want to do a pre-validation. For this scenario, tool expects you to supply the values to the parameters in `config/params.conf` file. Check "Usage" part below for details
 
 - #### <u>Scenario B - Already created your HDInsight cluster and want to validate your network settings</u>
-  After you created your HDInsight cluster and have started using, it's possible that your network settings might have changed by you or someone else. You may have various problems in various scenarios when working with your cluster because of those "unknown" changes. You can use HNV to find those "unknown" changes to fix.
+  After you created your HDInsight cluster and have started using, it's possible that your network settings might have changed by you mistakenly or someone else. You may have various problems in various scenarios when working with your cluster because of those changes. HNV can show you the missing pieces in those situations.
+
   For this scenario, tool expects you to supply the CLUSTER_DNS_NAME in `config/params.conf` file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the `config/params.conf` file.<br> 
   P.S.: Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
-For both scenario A and B, HNV checks the below components if they're configured correctly for Azure HDInsight or not:
+For both scenarios A and B, HNV checks the below components if they're configured correctly for Azure HDInsight or not:
 1. Network Security Group (NSG) in the subnet
-2. Using Azure Firewall and User Defined Route (UDR)
-3. Using non-Azure Firewall Networking Virtual Appliance (NVA) and User Defined Route : Although tool can obtain the firewall rules and checks if you are using Azure Firewall, it won't be able to gather firewall rules from an NVA other than Azure Firewall. But the tool still will do inbound/outbound checks in Part 2
+2. Azure Firewall and User Defined Route (UDR), if you are using 
+3. Using non-Azure Firewall Networking Virtual Appliance (NVA) and User Defined Route:<br>
+Although tool can obtain the firewall rules and checks if you are using Azure Firewall, it won't be able to gather firewall rules from an NVA other than Azure Firewall. But the tool still will do inbound/outbound connections checks in Part B.
 
 ## Requirements:
 <li>HNV requires you to create an <a href="https://portal.azure.com/?feature.customportal=false#create/Canonical.UbuntuServer1804LTS-ARM">Ubuntu Server 18.04 LTS Azure Linux VM</a> in the subnet that you are planning to create the HDInsight cluster, or the subnet that you used for your HDInsight cluster if you've created your HDInsight cluster already. Also, VM must be created in the same region as your HDInsight cluster. 
 You can use as low as a B1s (1G RAM, 1 vCore) for the VM size or bigger. When you are done with HNV, don't forget to delete this VM. If you are planning to use it again, you may want to "Stop" the VM to avoid charges.
 <li>You will need to create a <a href="https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python#authentication-example-using-a-service-principal">Azure Service Principal</a> for the tool to access resources in your subscription
-<li><a href="https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview">Azure Network Watcher</a> : HNV uses OS built-in "nc" tool to do an actual "outbound" access checks. For "inbound" access checks, it uses <a href="https://docs.microsoft.com/en-us/azure/network-watcher/diagnose-vm-network-traffic-filtering-problem#use-ip-flow-verify">IPFlowVerify</a> diagnostics feature of network watcher. If you already have a network watcher created in the region, HNV will find and use it. If you don't, HNV will create an network watcher in the region to use. When script finished, it will delete network watcher if HNV needed to create one. 
+<li><a href="https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview">Azure Network Watcher</a> : HNV uses OS built-in "nc" tool to do an actual "outbound" connection check. For "inbound" connection checks, it uses <a href="https://docs.microsoft.com/en-us/azure/network-watcher/diagnose-vm-network-traffic-filtering-problem#use-ip-flow-verify">IPFlowVerify</a> diagnostics feature of network watcher. If you already have a network watcher created in the region, HNV will find and use it. If you don't, HNV will create an network watcher in the region to use. When script finished, it will delete network watcher if HNV needed to create one. 
 1000 network diagnostic tool usage per month is Free in Azure Network Watcher. Additional 1000 tool usage per month is $0.001 . Please check <a href="https://azure.microsoft.com/en-us/pricing/details/network-watcher/">Azure Network Watcher pricing</a> for more details
 <br><br>
 
@@ -88,29 +93,35 @@ After creating the VM, you need to follow the steps below :
    If you are going to use <a href="https://docs.microsoft.com/en-us/azure/hdinsight/domain-joined/hdinsight-security-overview">Enterprise Security Pack (ESP)</a>:
 
   - AADDS_DOMAIN : Your AAD-DS domain name. Leave it empty if you won't use ESP
-    RANGERDB : Azure SQL Server name for your custom RangerDB server. If you are going to use default Ranger DB, leave it empty
+  - RANGERDB : Azure SQL Server name for your custom RangerDB server. If you are going to use default Ranger DB, leave it empty
 
 #### For <u>Scenario B (You already have your HDInsight cluster created and want to validate your network settings)</u>:
 - You need to enter CLUSTER_DNS_NAME in `config/params.conf` file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the `config/params.conf` file. 
 P.S. : Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
 ### 5 - Run HNV
-+ Now you can use the tool with the command below
++ Now you can use the tool with the command below<br>
+```
 sudo ./HDInsightNetworkValidator.py
+```
 
 ## Not Supported:
-1. If you are using an NVA (Network Virtual Appliance) other than Azure Firewall
-2. <a href="https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-private-link">"Private Link" enabled HDInsight cluster</a>
+Scenarios below are note supported : 
+1. <a href="https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-private-link">"Private Link" enabled HDInsight cluster</a> scenario is not supported.
+
+## Limitations : 
+1. If you are using an NVA (Network Virtual Appliance) other than Azure Firewall : <br> HNV can obtain the firewall rules if you are using Azure Firewall and can check those rules, but it won't be able to gather firewall rules from any other NVA than Azure Firewall.
+But the tool still will do inbound/outbound connections checks in Part B, meaning that you still can use the tool to find out what rules are missing and you will be able to ask your NVA admin to add those to your NVA.
 
 ## Troubleshooting:
 <li> Receiving error when running "./setup.sh"<br>
-setup.sh installs a few packages with "apt" package manager and install Python libraries with pip. It's possible that your network admin does not allow traffic to the outside for apt and pip to install packages and libraries. 
-You might ask your network admin to supply a proxy server that you can use accessing internet via a proxy server. Refer to https://askubuntu.com/questions/257290/configure-proxy-for-apt for further details on how to configure apt and/or other tools to work with your proxy server.
-As we don't want HNV tool itself to go thorugh your proxy server, please don't forget to remove this proxy server setting after setup.sh successfully installed the python libraries with pip.
+setup.sh installs a few packages with Ubuntu's built-in "apt" package manager and also installs Python libraries with pip. It's possible that your network is blocking traffic to the internet for apt and pip to install packages and libraries. <br>
+You might ask your network admin to supply a proxy server that you can use accessing internet via a proxy server. You may refer to https://askubuntu.com/questions/257290/configure-proxy-for-apt for further details on how to configure apt and/or other tools to work with your proxy server.<br>
+P.S. : Please don't forget to remove this proxy server setting after setup.sh successfully installed the python libraries with pip, as we don't want HNV tool itself to go through your proxy server when making networking checks.
 
 ## How it works :
 It consists of 4 parts:<br>
-#### PART 1 - Gathering Information
+#### PART A - Gathering Information
   - Get the name of the current diagnostic VM  
   - Get the Region/Location, Private IP, DNS settings, VNet/Subnet of the diagnostic VM
   - Check the NSG rules in the subnet
@@ -124,11 +135,11 @@ It consists of 4 parts:<br>
        - As you are using a firewall/NVA, gets your UDR
        - If it's Azure Firewall checks Application Rule Collections and Network Rule Collections
 
-#### PART 2 - Add Validations:
+#### PART B - Add "connection check"s to a list:
 - In this part, tool adds the necessary inbound sources, which are HDInsight Management Endpoints, and outbound destinations to its list depending on what's obtained in the previous part.
 
-#### PART 3 - Execute the validations:   
-- Do the actual validations populated in Part 2. It uses "nc" command for the outbound validation executions and network watcher's IpFlowVerify tool for inbound validation executions.
+#### PART C - Execute the "connections check"s:   
+- Do the actual validations populated in Part B. It uses "nc" command for the outbound validation executions and network watcher's IpFlowVerify tool for inbound validation executions.
 
 #### SUMMARY - Results:
 - Show the results
