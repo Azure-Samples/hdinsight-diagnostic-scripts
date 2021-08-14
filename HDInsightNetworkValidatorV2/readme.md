@@ -1,16 +1,14 @@
 # HDInsight Network Validator (a.k.a HNV) v2.0
 
 ## Table of Contents
-<li> <a href="#what">What does it do</a> ?
+<li> <a href="#what">What is HNV ?</a> 
 <li> <a href="#req">Requirements</a>
 <li> <a href="#usage">Usage</a>
-<li> <a href="#notsupported">Not supported scenarios</a>
-<li> <a href="#limitations">Limitations</a>
+<li> <a href="#notsupported">Not supported scenarios and limitations</a>
 <li> <a href="#ts">Troubleshooting</a>
-<li> <a href="#how">How it works ?</a>
 <br><br>
 
-## <a id="what"></a>What does it do ?
+## <a id="what"></a>What is HNV ?
 Creating an HDInsight cluster in a complex networking environment involving firewall, user-defined routes etc. like networking components requires configuring multiple settings properly. HDInsight cluster creation can fail if your network is not configured properly.<br>
 HDInsight Network Validator (a.k.a HNV) is a Python 3.x script which is checking your networking configuration and reporting back if your network is properly configured to create and use an HDInsight cluster or not.
 <br>
@@ -102,14 +100,13 @@ P.S. : Don't forget to remove all those after you're done using HNV! Better you 
 ### 5 - Run HNV
 + Now you can use the tool with the command below<br>
 ```
-sudo ./HDInsightNetworkValidator.py
+python3 ./HDInsightNetworkValidator.py
 ```
 
-## <a id="notsupported"></a>Not Supported:
+## <a id="notsupported"></a>Not supported scenarios and limitations:
 Scenarios below are note supported : 
 1. <a href="https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-private-link">"Private Link" enabled HDInsight cluster</a> scenario is not supported.
 
-## <a id="limitations"></a>Limitations : 
 1. If you are using an NVA (Network Virtual Appliance) other than Azure Firewall : <br> HNV can obtain the firewall rules if you are using Azure Firewall and can check those rules, but it won't be able to gather firewall rules from any other NVA than Azure Firewall.
 But the tool still will do inbound/outbound connections checks in Part B, meaning that you still can use the tool to find out what rules are missing and you will be able to ask your NVA admin to add those to your NVA.
 
@@ -118,28 +115,3 @@ But the tool still will do inbound/outbound connections checks in Part B, meanin
 setup.sh installs a few packages with Ubuntu's built-in "apt" package manager and also installs Python libraries with pip. It's possible that your network is blocking traffic to the internet for apt and pip to install packages and libraries. <br>
 You might ask your network admin to supply a proxy server that you can use accessing internet via a proxy server. You may refer to https://askubuntu.com/questions/257290/configure-proxy-for-apt for further details on how to configure apt and/or other tools to work with your proxy server.<br>
 P.S. : Please don't forget to remove this proxy server setting after setup.sh successfully installed the python libraries with pip, as we don't want HNV tool itself to go through your proxy server when making networking checks.
-
-## <a id="how"></a>How it works :
-It consists of 4 parts:<br>
-#### PART A - Gathering Information
-  - Get the name of the current diagnostic VM  
-  - Get the Region/Location, Private IP, DNS settings, VNet/Subnet of the diagnostic VM
-  - Check the NSG rules in the subnet
-  - Get the storage accounts and do the checks below for each: 
-    - Check if "Secure Transfer Required" is set to "True"
-    - Check if you are using storage firewall and if you are, checks if storage is configured for the current VNet to access
-  - Create a Network Watcher in the region, if there is none
-  - Check what is the NextHop set for 8.8.8.8
-    - If nexthop is set to "Internet", understands that you are not using Azure Firewall or another NVA
-    - if nexthop is set to "VirtualAppliance", it gets this Private IP that it's set for nexthop and enumarates Azure Firewalls in the subscription. If it matches with the PRivate IP, gets the Azure Firewall resource.
-       - As you are using a firewall/NVA, gets your UDR
-       - If it's Azure Firewall checks Application Rule Collections and Network Rule Collections
-
-#### PART B - Add "connection check"s to a list:
-- In this part, tool adds the necessary inbound sources, which are HDInsight Management Endpoints, and outbound destinations to its list depending on what's obtained in the previous part.
-
-#### PART C - Execute the "connections check"s:   
-- Do the actual validations populated in Part B. It uses "nc" command for the outbound validation executions and network watcher's IpFlowVerify tool for inbound validation executions.
-
-#### SUMMARY - Results:
-- Show the results
