@@ -112,6 +112,6 @@ But the tool still will do inbound/outbound connections checks in Part B, meanin
 
 ## <a id="ts"></a>Troubleshooting:
 <li> Receiving error when running "./setup.sh"<br>
-setup.sh installs a few packages with Ubuntu's built-in "apt" package manager and also installs Python libraries with pip. It's possible that your network is blocking traffic to the internet for apt and pip to install packages and libraries. <br>
-You might ask your network admin to supply a proxy server that you can use accessing internet via a proxy server. You may refer to https://askubuntu.com/questions/257290/configure-proxy-for-apt for further details on how to configure apt and/or other tools to work with your proxy server.<br>
+setup.sh installs a few packages with Ubuntu's built-in "apt" package manager and also installs Python libraries with pip. It's possible that your network is blocking traffic to the internet for apt and pip to download  packages and libraries. <br>
+You might ask your network admin to supply a proxy server that you can use accessing internet via a proxy server. Refer https://askubuntu.com/questions/257290/configure-proxy-for-apt for further details on how to configure apt and/or other tools to work with your proxy server.<br>
 P.S. : Please don't forget to remove this proxy server setting after setup.sh successfully installed the python libraries with pip, as we don't want HNV tool itself to go through your proxy server when making networking checks.
