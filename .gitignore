@@ -350,7 +350,7 @@ MigrationBackup/
 .ionide/
 
 # HDInsightNetworkValidatorV2 specific
-HDInsightNetworkValidatorV2/config/params.conf
+#HDInsightNetworkValidatorV2/config/params.conf
 HDInsightNetworkValidatorV2/config/mysp.json
 HDInsightNetworkValidatorV2/config/ServiceTags*.json
 HDInsightNetworkValidatorV2/tests/**
