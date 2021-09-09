@@ -1,4 +1,4 @@
-# HDInsight Network Validator (a.k.a HNV) v2.0
+# HDInsight Network Validator (aka HNV) v2.0
 
 ## Table of Contents
 <li> <a href="#what">What is HNV ?</a> 
@@ -10,7 +10,7 @@
 
 ## <a id="what"></a>What is HNV ?
 Creating an HDInsight cluster in a complex networking environment involving firewall, user-defined routes etc. like networking components requires configuring multiple settings properly. HDInsight cluster creation can fail if your network is not configured properly.<br>
-HDInsight Network Validator (a.k.a HNV) is a Python 3.x script which is checking your networking configuration and reporting back if your network is properly configured to create and use an HDInsight cluster or not.
+HDInsight Network Validator (aka HNV) is a Python 3.x script which is checking your networking configuration and reporting back if your network is properly configured to create and use an HDInsight cluster or not.
 <br>
 Please note that HNV does not make any changes in any of your configuration. Instead, it will report what you should fix to you.
 
@@ -23,7 +23,7 @@ Please note that HNV does not make any changes in any of your configuration. Ins
   After you created your HDInsight cluster and have started using, it's possible that your network settings might have changed by you mistakenly or someone else. You may have various problems in various scenarios when working with your cluster because of those changes. HNV can show you the missing pieces in those situations.
 
   For this scenario, tool expects you to supply the CLUSTER_DNS_NAME in `config/params.conf` file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the `config/params.conf` file.<br> 
-  P.S.: Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
+  PS: Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
 For both scenarios A and B, HNV checks the below components if they're configured correctly for Azure HDInsight or not:
 1. Network Security Group (NSG) in the subnet
@@ -56,7 +56,7 @@ You will need to create a "Service Principal" following steps below (or by refer
  `az ad sp create-for-rbac --name "spHDInsightNetworkValidationScript" --sdk-auth`
  - Command above will return the service information as JSON. Copy this JSON output to a secure/safe place as it contains the secret for your service principal.
 
-P.S. : If you receive a permission error after running the commands above, you need to contact your subscription owner and ask them to run the commands and share the output JSON with you.
+PS : If you receive a permission error after running the commands above, you need to contact your subscription owner and ask them to run the commands and share the output JSON with you.
 
 When running tool, it will ask you to paste this service principal JSON in each run. If you prefer, you can save the output JSON into a file like "config/mysp.json" and set SP_JSON_FILE="config/mysp.json" in config/params.conf file. So HNV will read the service principal details from the file. 
 After you're done with the tool, you need to make sure that you remove this config/mysp.json file as it contains  secret for your service principal.
@@ -95,7 +95,7 @@ After creating the VM, you need to follow the steps below :
 
 #### For <u>Scenario B (You already have your HDInsight cluster created and want to validate your network settings)</u>:
 - You need to enter CLUSTER_DNS_NAME in `config/params.conf` file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the `config/params.conf` file. 
-P.S. : Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
+PS : Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
 ### 5 - Run HNV
 + Now you can use the tool with the command below<br>
@@ -114,4 +114,4 @@ But the tool still will do inbound/outbound connections checks in Part B, meanin
 <li> Receiving error when running "./setup.sh"<br>
 setup.sh installs a few packages with Ubuntu's built-in "apt" package manager and also installs Python libraries with pip. It's possible that your network is blocking traffic to the internet for apt and pip to download  packages and libraries. <br>
 You might ask your network admin to supply a proxy server that you can use accessing internet via a proxy server. Refer https://askubuntu.com/questions/257290/configure-proxy-for-apt for further details on how to configure apt and/or other tools to work with your proxy server.<br>
-P.S. : Please don't forget to remove this proxy server setting after setup.sh successfully installed the python libraries with pip, as we don't want HNV tool itself to go through your proxy server when making networking checks.
+PS : Please don't forget to remove this proxy server setting after setup.sh successfully installed the python libraries with pip, as we don't want HNV tool itself to go through your proxy server when making networking checks.
