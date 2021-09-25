@@ -357,6 +357,7 @@ class HDInsightNetworkValidator:
         if self.current_subnet.network_security_group == None:
             if self.verboseMode:
                 showTextWithIcon(self, "Subnet NSG : There is no NSG set in current subnet")
+                printAndLog(self, "Exiting as there is nothing to check")
         else:
             self.current_subnet_nsg_name = self.current_subnet.network_security_group.id.split("/")[-1]
             self.current_subnet_nsg_rg_name = self.current_subnet.network_security_group.id.split("/")[4]
