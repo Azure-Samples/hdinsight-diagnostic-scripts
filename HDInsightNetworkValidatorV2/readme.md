@@ -74,7 +74,7 @@ After creating the VM, you need to follow the steps below :
 `git clone https://github.com/Azure-Samples/hdinsight-diagnostic-scripts.git`
 - You will need to run the commands below only once to install the necessary Ubuntu and Python packages: <br>
   ```
-  cd HDInsightNetworkValidatorV2
+  cd hdinsight-diagnostic-scripts/HDInsightNetworkValidatorV2
   sudo chmod +x ./setup.sh
   sudo ./setup.sh
   ```
