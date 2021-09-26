@@ -89,8 +89,8 @@ def getHDInsightManagementEndpointIPsFromDocs(self):
         deltaDays = (datetime.now() - checkDateTime).days
 
     if deltaDays > 7:
-        printAndLog(self, "HDInsight Management Endpoint IPs are " + str(deltaDays) + " days old. Trying to update ...")
-
+        if not (deltaDays == 999):
+            printAndLog(self, "HDInsight Management Endpoint IPs json file is " + str(deltaDays) + " days old. Trying to update ...")
         try:
             webpage = requests.get(docURL)
             soup = BeautifulSoup(webpage.content, "lxml")
@@ -133,6 +133,7 @@ def getHDInsightManagementEndpointIPsFromDocs(self):
             f.writelines(lines)
             f.close()
             # return fourGlobalIPlist
+            printAndLog(self, "HDInsight Management Endpoint IPs json file is updated successfully")
             self.params["FOUR_GLOBAL_HDIME_IPS"] = fourGlobalIPlist
         except:
             printAndLog(self, "Cannot reach " + docURL + ". Will be using the 4 global HDInsight Management IP addresses saved in params.conf before on " + time.ctime(int(str(self.params["HDIME_IPS_CHECK_DATETIME"]).split(".")[0])) + " UTC")
@@ -259,6 +260,7 @@ def getMultipleRegionalServiceTagsForGroup1FromDocs(self):
     self.params["MULTIPLE_REGIONAL_SERVICE_TAGS_FOR_GROUP1_SHORT"] = serviceTagsShort
 
     return serviceTags
+
 
 def getHDInsightManagementEndpointIPsForCurrentRegion(self):
     """Get the HDIME IPs for current region (based on the IPs in the table in docs, not from Service Tag JSON!)"""
