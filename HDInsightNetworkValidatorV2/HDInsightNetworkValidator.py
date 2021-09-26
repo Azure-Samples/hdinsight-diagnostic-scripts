@@ -520,13 +520,13 @@ class HDInsightNetworkValidator:
 
     def doStorageAccountChecks(self):
         """Do Storage Account checks"""
-        # Get storage accounts (either from params.txt or from HDInsight cluster directly)
+        # Get storage accounts (either from params.conf or from HDInsight cluster directly)
         # Ref: https://docs.microsoft.com/en-us/azure/hdinsight/hdinsight-restrict-outbound-traffic#create-and-configure-a-route-table
         getStorageAccounts(self)
 
         # No storage accounts
         if not self.storageAccounts:
-            showTextWithIcon(self, "You have not supplied primary storage account name with PRIMARY_STORAGE in params.txt file. Bypassing all checks and validations about storage accounts", iconType="warn")
+            showTextWithIcon(self, "You have not supplied primary storage account name with PRIMARY_STORAGE in params.conf file. Bypassing all checks and validations about storage accounts", iconType="warn")
         else:
             # Check if "Secure Transfer Required" is set for all storage accounts
             if self.verboseMode:
