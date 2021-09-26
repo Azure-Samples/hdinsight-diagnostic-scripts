@@ -357,8 +357,8 @@ class HDInsightNetworkValidator:
         if self.current_subnet.network_security_group == None:
             # if self.verboseMode:
             showTextWithIcon(self, "Subnet NSG : There is no NSG set in current subnet")
-            printAndLog(self, "Exiting as there is nothing to check")
-            sys.exit()
+            # printAndLog(self, "Exiting as there is nothing to check")
+            # sys.exit()
         else:
             self.current_subnet_nsg_name = self.current_subnet.network_security_group.id.split("/")[-1]
             self.current_subnet_nsg_rg_name = self.current_subnet.network_security_group.id.split("/")[4]
@@ -475,25 +475,48 @@ class HDInsightNetworkValidator:
         spinnerText = "Check NSG in your VM's NIC"
         spinner = Halo(text=spinnerText, spinner="line", placement="left")
 
-        if self.current_vm_nic.network_security_group == None:
-            if self.verboseMode:
-                spinner.text = "There is no NSG set on this current VM's NIC. OK!"
-                # spinner.info()  #.info() generates "i" icon in "Blue". To be able to change the color, using .stop_and_persist()
-                spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=spinner.text)
-                print("")
-        else:
-            if str(self.current_vm_nic.network_security_group.id) == str(self.current_subnet.network_security_group.id):
-                if self.verboseMode:
-                    # printAndLog(self,'   VM NIC NSG and Subnet NSG is same. OK!')
-                    spinner.text = spinner.text + ". VM NIC NSG and Subnet NSG is same. OK!"
-                    # spinner.info()  #.info() generates "i" icon in "Blue". To be able to change the color, using .stop_and_persist()
-                    spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=spinner.text)
-                    print("")
-            else:
+        if self.current_vm_nic.network_security_group == None and self.current_subnet.network_security_group == None:
+            spinner.text = "There is no NSG set on both current subnet and the current VM's NIC."
+            spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=spinner.text)
+
+        elif self.current_vm_nic.network_security_group != None and self.current_subnet.network_security_group == None:
+            spinner.text = "There is no NSG set on current subnet but there is an NSG in the current VM's NIC."
+            spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=spinner.text)
+            # spinner.fail()
+            # printAndLog(self, "   ==> Exiting! Please make the necessary change below and rerun the tool after the change: ")
+            # printAndLog(self, '       You will need to change the VM NIC NSG to "None" as you don\'t have an NSG in your subnet')
+            # sys.exit()
+        elif self.current_vm_nic.network_security_group == None and self.current_subnet.network_security_group != None:
+            spinner.fail()
+            printAndLog(self, "   ==> Exiting! Please make the necessary change below and rerun the tool after the change: ")
+            printAndLog(self, '       You will need to change the VM NIC NSG to "None" or to the same NSG set for your subnet, which is "' + str(self.current_subnet.network_security_group.id) + '"')
+            sys.exit()
+        elif self.current_vm_nic.network_security_group != None and self.current_subnet.network_security_group != None:
+            if str(self.current_vm_nic.network_security_group.id) != str(self.current_subnet.network_security_group.id):
                 spinner.fail()
                 printAndLog(self, "   ==> Exiting! Please make the necessary change below and rerun the tool after the change: ")
                 printAndLog(self, '       You will need to change the VM NIC NSG to "None" or to the same NSG set for your subnet, which is "' + str(self.current_subnet.network_security_group.id) + '"')
                 sys.exit()
+
+        # if self.current_vm_nic.network_security_group == None:
+        #     if self.verboseMode:
+        #         spinner.text = "There is no NSG set on this current VM's NIC. OK!"
+        #         # spinner.info()  #.info() generates "i" icon in "Blue". To be able to change the color, using .stop_and_persist()
+        #         spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=spinner.text)
+        #         print("")
+        # else:
+        #     if str(self.current_vm_nic.network_security_group.id) == str(self.current_subnet.network_security_group.id):
+        #         if self.verboseMode:
+        #             # printAndLog(self,'   VM NIC NSG and Subnet NSG is same. OK!')
+        #             spinner.text = spinner.text + ". VM NIC NSG and Subnet NSG is same. OK!"
+        #             # spinner.info()  #.info() generates "i" icon in "Blue". To be able to change the color, using .stop_and_persist()
+        #             spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=spinner.text)
+        #             print("")
+        #     else:
+        #         spinner.fail()
+        #         printAndLog(self, "   ==> Exiting! Please make the necessary change below and rerun the tool after the change: ")
+        #         printAndLog(self, '       You will need to change the VM NIC NSG to "None" or to the same NSG set for your subnet, which is "' + str(self.current_subnet.network_security_group.id) + '"')
+        #         sys.exit()
 
     def doStorageAccountChecks(self):
         """Do Storage Account checks"""
