@@ -31,7 +31,7 @@ from azure.mgmt.hdinsight.models import *
 class HDInsightNetworkValidator:
 
     # Globals
-    scriptVersion = "2.0.0 - Final"
+    scriptVersion = "2.0.1"
     verboseMode = False
 
     # Parameters dictionary
