@@ -236,7 +236,7 @@ def getRequiredServiceTagsForCurrentRegion(self):
 
 def getDefaultCredential(self):
 
-    if self.params["SP_JSON_FILE"] == "":
+    if not ("SP_JSON_FILE" in self.params) or self.params["SP_JSON_FILE"] == "":
         SP_JSON_CONTENT = ""
         printAndLog(self, "Please copy/paste the service principal JSON content, hit Enter and press Ctrl-D after")
         json_console_input = sys.stdin.readlines()
