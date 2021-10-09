@@ -789,10 +789,24 @@ class HDInsightNetworkValidator:
 
         # Add "Regional" HDInsight Management Endpoint (HDIME) validations
         regionalIPIndex = 0
+        regionalIPSubIpIndex = 0  # Some regions have CIDRs (For ex EastUS2)
         for HDIME_IP in self.CURRENT_REGION_HDIME_IPS:
+
             regionalIPIndex = regionalIPIndex + 1
-            self.totalValidationCount = self.totalValidationCount + 1
-            self.validations.append(Validation(self.totalValidationCount, 'From "Regional" HDInsight Management Endpoint IP #' + str(regionalIPIndex) + " " + str(HDIME_IP) + " to subnet", "nw", "False", str(HDIME_IP), "TCP", 443, "inbound", 0))
+
+            if "/" in HDIME_IP:
+                # regionalIPSubIPs = []
+                for HDIME_IP_SUB_IP in IPNetwork(HDIME_IP):
+                    regionalIPSubIpIndex = regionalIPSubIpIndex + 1
+                    self.totalValidationCount = self.totalValidationCount + 1
+                    self.validations.append(Validation(self.totalValidationCount, 'From "Regional" HDInsight Management Endpoint IP #' + str(regionalIPIndex) + "-" + str(regionalIPSubIpIndex) + " " + str(HDIME_IP_SUB_IP) + " to subnet", "nw", "False", str(HDIME_IP_SUB_IP), "TCP", 443, "inbound", 0))
+                    # regionalIPSubIPs.append(str(HDIME_IP_SUB_IP))
+                # print(regionalIPSubIPs)
+                # sys.exit()
+            else:
+                self.totalValidationCount = self.totalValidationCount + 1
+                self.validations.append(Validation(self.totalValidationCount, 'From "Regional" HDInsight Management Endpoint IP #' + str(regionalIPIndex) + " " + str(HDIME_IP) + " to subnet", "nw", "False", str(HDIME_IP), "TCP", 443, "inbound", 0))
+
             if self.params["DEBUG_ONLY_FIRST_HDIME_VALIDATION"] == "True":
                 break  # Only 1st is enough for dev
 
