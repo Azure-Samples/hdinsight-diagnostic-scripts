@@ -26,7 +26,7 @@ def getCurrentVNetsResourceGroup(self):
     currentVNetRGName = self.current_vnet.id.split("/")[4]
     resource_groups = self.resource_client.resource_groups.list()
     for rg in resource_groups:
-        if currentVNetRGName == rg.name:
+        if currentVNetRGName == str(rg.name).lower():
             return rg
 
 
