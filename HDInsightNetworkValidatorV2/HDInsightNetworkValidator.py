@@ -262,7 +262,7 @@ class HDInsightNetworkValidator:
             showTextWithIcon(self, 'VNet IP CIDR: "' + Fore.GREEN + self.current_vnet.address_space.address_prefixes[0] + Style.RESET_ALL + '", Subnet IP CIDR : "' + Fore.GREEN + self.current_subnet.address_prefix + '"' + Style.RESET_ALL)
 
         # Get DNS servers from the VNet
-        if self.current_vnet.dhcp_options == None:
+        if self.current_vnet.dhcp_options == None or self.current_vnet.dhcp_options.dns_servers == []:
             self.vnet_is_using_custom_dns = False
             if self.verboseMode:
                 showTextWithIcon(self, "You are using " + Fore.GREEN + "Azure DNS servers" + Style.RESET_ALL + " in this VNet")
