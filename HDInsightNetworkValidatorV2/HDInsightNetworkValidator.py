@@ -478,7 +478,6 @@ class HDInsightNetworkValidator:
         if self.current_vm_nic.network_security_group == None and self.current_subnet.network_security_group == None:
             spinner.text = "There is no NSG set on both current subnet and the current VM's NIC."
             spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=spinner.text)
-
         elif self.current_vm_nic.network_security_group != None and self.current_subnet.network_security_group == None:
             spinner.text = "There is no NSG set on current subnet but there is an NSG in the current VM's NIC."
             spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=spinner.text)
@@ -487,10 +486,8 @@ class HDInsightNetworkValidator:
             # printAndLog(self, '       You will need to change the VM NIC NSG to "None" as you don\'t have an NSG in your subnet')
             # sys.exit()
         elif self.current_vm_nic.network_security_group == None and self.current_subnet.network_security_group != None:
-            spinner.fail()
-            printAndLog(self, "   ==> Exiting! Please make the necessary change below and rerun the tool after the change: ")
-            printAndLog(self, '       You will need to change the VM NIC NSG to "None" or to the same NSG set for your subnet, which is "' + str(self.current_subnet.network_security_group.id) + '"')
-            sys.exit()
+            spinner.text = "There is an NSG set on current subnet but there is no NSG in the current VM's NIC."
+            spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=spinner.text)
         elif self.current_vm_nic.network_security_group != None and self.current_subnet.network_security_group != None:
             if str(self.current_vm_nic.network_security_group.id) != str(self.current_subnet.network_security_group.id):
                 spinner.fail()
