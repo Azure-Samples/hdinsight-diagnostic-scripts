@@ -112,6 +112,9 @@
         "tier": "Standard",
         "clusterDefinition": {
           "kind": "spark",
+          "componentVersion": {
+                        "Spark": "3.0"
+                    },
           "configurations": {
             "gateway": {
               "restAuthCredential.isEnabled": true,
