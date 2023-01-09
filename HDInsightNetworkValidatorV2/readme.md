@@ -10,7 +10,7 @@
 
 ## <a id="what"></a>What is HNV ?
 Creating an HDInsight cluster in a complex networking environment involving firewall, user-defined routes etc. like networking components requires configuring multiple settings properly. HDInsight cluster creation can fail if your network is not configured properly.<br>
-HDInsight Network Validator (aka HNV) is a Python 3.x script which is checking your networking configuration and reporting back if your network is properly configured to create and use an HDInsight cluster or not.
+HDInsight Network Validator (aka HNV) is a Python 3.x (tested with Python 3.7) script which is checking your networking configuration and reporting back if your network is properly configured to create and use an HDInsight cluster or not.
 <br>
 Please note that HNV does not make any changes in any of your configuration. Instead, it will report what you should fix to you.
 
@@ -32,7 +32,7 @@ For both scenarios A and B, HNV checks the below components if they're configure
 Although tool can obtain the firewall rules and checks if you are using Azure Firewall, it won't be able to gather firewall rules from an NVA other than Azure Firewall. But the tool still will do inbound/outbound connections checks in Part B.
 
 ## <a id="req"></a>Requirements:
-<li>HNV requires you to create an <a href="https://portal.azure.com/?feature.customportal=false#create/Canonical.UbuntuServer1804LTS-ARM">Ubuntu Server 18.04 LTS Azure Linux VM</a> in the subnet that you are planning to create the HDInsight cluster, or the subnet that you used for your HDInsight cluster if you've created your HDInsight cluster already. Also, VM must be created in the same region as your HDInsight cluster. 
+<li>HNV requires you to create an <a href="https://portal.azure.com/?feature.customportal=false#create/canonical.0001-com-ubuntu-server-focal20_04-lts-ARM">Ubuntu Server 20.04 LTS Azure Linux VM</a> in the subnet that you are planning to create the HDInsight cluster, or the subnet that you used for your HDInsight cluster if you've created your HDInsight cluster already. Also, VM must be created in the same region as your HDInsight cluster. 
 You can use as low as a B1s (1G RAM, 1 vCore) for the VM size or bigger. When you are done with HNV, don't forget to delete this VM. If you are planning to use it again, you may want to "Stop" the VM to avoid charges.
 <li>You will need to create a <a href="https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python#authentication-example-using-a-service-principal">Azure Service Principal</a> for the tool to access resources in your subscription
 <li><a href="https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview">Azure Network Watcher</a> : HNV uses OS built-in "nc" tool to do an actual "outbound" connection check. For "inbound" connection checks, it uses <a href="https://docs.microsoft.com/en-us/azure/network-watcher/diagnose-vm-network-traffic-filtering-problem#use-ip-flow-verify">IPFlowVerify</a> diagnostics feature of network watcher. If you already have a network watcher created in the region, HNV will find and use it. If you don't, HNV will create an network watcher in the region to use. When script finished, it will delete network watcher if HNV needed to create one. 
@@ -62,7 +62,7 @@ When running tool, it will ask you to paste this service principal JSON in each 
 After you're done with the tool, you need to make sure that you remove this config/mysp.json file as it contains  secret for your service principal.
 
 ### 2 - Create Ubuntu VM
-- Create an <a href="https://portal.azure.com/?feature.customportal=false#create/Canonical.UbuntuServer1804LTS-ARM">Ubuntu Server 18.04 LTS Azure Linux VM</a> in the subnet that you are planning to create the HDInsight cluster, or the subnet that you used for your HDInsight cluster if you created HDInsight cluster already. Also, VM must be created in the same region as your HDInsight cluster. 
+- Create an <a href="https://portal.azure.com/?feature.customportal=false#create/canonical.0001-com-ubuntu-server-focal20_04-lts-ARM">Ubuntu Server 20.04 LTS Azure Linux VM</a> in the subnet that you are planning to create the HDInsight cluster, or the subnet that you used for your HDInsight cluster if you created HDInsight cluster already. Also, VM must be created in the same region as your HDInsight cluster. 
 You can use as low as a B1s (1G RAM, 1 vCore) VM size or bigger. When you are done  with HNV, don't forget to delete this VM. If you are planning to use it again, you may want to "Stop" the VM to avoid charges.
 - When creating the VM, be sure that you selected the same VNet/Subnet you are planning to create the HDInsight cluster. 
 - When setting NSG for your VM's NIC card, you should select the same NSG you use in the subnet or "None". If you select your subnet NSG and your subnet NSG does not allow SSH access to TCP 22, you need to add it to your subnet NSG. So you can SSH into the VM.
