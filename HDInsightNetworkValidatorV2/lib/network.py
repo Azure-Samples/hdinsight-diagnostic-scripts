@@ -108,13 +108,15 @@ def checkSubnetNSGRulesIfItHasAnyHDInsightServiceTags(self):
     """Checks the Subnet NSG Rules if "any" HDInsight Service Tag is added or not. This is used to see whether customer is adding HDIME IPs manually or via Service Tags"""
     current_subnet_nsg_rules = getSubnetNSGRules(self)
     for security_rule in current_subnet_nsg_rules:
-        if (
-            # First 9 characters should be "HDInsight" (Covers both "HDInsight" global tag as well as any other "HDInsight.someregion" regional tags)
-            security_rule.source_address_prefix[:9] == "HDInsight"
-            and (security_rule.destination_port_range == "443" or security_rule.destination_port_range == "*")
-            and (security_rule.direction == "Inbound")
-        ):
-            return True
+
+        if ( len(security_rule.source_address_prefix)>0 ):
+            if (
+                # First 9 characters should be "HDInsight" (Covers both "HDInsight" global tag as well as any other "HDInsight.someregion" regional tags)
+                security_rule.source_address_prefix[:9] == "HDInsight"
+                and (security_rule.destination_port_range == "443" or security_rule.destination_port_range == "*")
+                and (security_rule.direction == "Inbound")
+            ):
+                return True
     return False
 
 
