@@ -102,6 +102,10 @@ PS : Don't forget to remove all those after you're done using HNV! Better you ma
 ```
 python3 ./HDInsightNetworkValidator.py
 ```
+If you want to see verbose output to the shell add "<b>-v</b>" switch as follows : 
+```
+python3 ./HDInsightNetworkValidator.py -v
+```
 
 ## <a id="notsupported"></a>Not supported scenarios and limitations:
 Scenarios below are note supported : 
