@@ -9,8 +9,12 @@ from netaddr import *
 
 from xml.etree.ElementTree import *
 
+from requests_html import HTMLSession
+
+
 
 def getServiceTagsJSONFileName(self):
+
     """Looks for a "ServiceTags_Public*.json" file in the current directory. If couldn't find any, goes ahead and downloads the latest"""
 
     # Ref: https://docs.microsoft.com/en-us/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files
@@ -52,8 +56,11 @@ def getServiceTagsJSONFileName(self):
 
         # Get the actual download URL from the download page
         result = []
-        response = requests.get(SERVICE_TAGS_DOWNLOAD_URL)
-        soup = BeautifulSoup(response.text, "html.parser")
+        
+        session = HTMLSession()
+        r = session.get(SERVICE_TAGS_DOWNLOAD_URL)
+        
+        soup = BeautifulSoup(r.text, "html.parser")
         for link in soup.findAll("a"):
             if ".json" in link.get("href") and not (link.get("href") in result):
                 result.append(link.get("href"))
