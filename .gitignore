@@ -353,10 +353,10 @@ MigrationBackup/
 #HDInsightNetworkValidatorV2/config/params.conf
 HDInsightNetworkValidatorV2/config/mysp.json
 HDInsightNetworkValidatorV2/config/ServiceTags*.json
+HDInsightNetworkValidatorV2/config/ServiceTags*.back
 HDInsightNetworkValidatorV2/tests/**
 HDInsightNetworkValidatorV2/logfile.log
 HDInsightNetworkValidatorV2/flow.txt
 HDInsightNetworkValidatorV2/doc.md
 HDInsightNetworkValidatorV2/.vscode/**
 HDInsightNetworkValidatorV2/__pycache__/**
-
