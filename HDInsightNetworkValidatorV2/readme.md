@@ -45,7 +45,7 @@ You can use as low as a B1s (1G RAM, 1 vCore) for the VM size or bigger. When yo
 ## <a id="usage"></a>Usage:
 ### 1 - Create "Networkwatcher Resource Group": <br>
 You will need to create a resource group for network watchers. Resource Group Name is: 
-- az group create --location "location e.g westus" --resource-group NetworkWatcherRG
+`az group create --location "location e.g westus" --resource-group NetworkWatcherRG`
 
 ### 2 - Create "Service Principal": <br>
 You will need to create a "Service Principal" following steps below (or by referring  <a href="https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python">here</a> ) : 
