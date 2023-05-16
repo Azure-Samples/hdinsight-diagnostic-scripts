@@ -43,7 +43,11 @@ You can use as low as a B1s (1G RAM, 1 vCore) for the VM size or bigger. When yo
 
 
 ## <a id="usage"></a>Usage:
-### 1 - Create "Service Principal": <br>
+### 1 - Create "Networkwatcher Resource Group": <br>
+You will need to create a resource group for network watchers. Resource Group Name is: 
+`az group create --location "location e.g westus" --resource-group NetworkWatcherRG`
+
+### 2 - Create "Service Principal": <br>
 You will need to create a "Service Principal" following steps below (or by referring  <a href="https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python">here</a> ) : 
  - Browse to Azure Cloud Shell in your browser https://shell.azure.com/bash
  - Run the command below in cloud shell to see your subscription information : <br>
@@ -55,19 +59,23 @@ You will need to create a "Service Principal" following steps below (or by refer
  - Next, choose a name for your service principal and create it with the following command:<br>
  `az ad sp create-for-rbac --name "spHDInsightNetworkValidationScript" --sdk-auth`
  - Command above will return the service information as JSON. Copy this JSON output to a secure/safe place as it contains the secret for your service principal.
-
+ - Note down the clientId value as we are going to use it in the next step  
 PS : If you receive a permission error after running the commands above, you need to contact your subscription owner and ask them to run the commands and share the output JSON with you.
 
 When running tool, it will ask you to paste this service principal JSON in each run. If you prefer, you can save the output JSON into a file like "config/mysp.json" and set SP_JSON_FILE="config/mysp.json" in config/params.conf file. So HNV will read the service principal details from the file. 
 After you're done with the tool, you need to make sure that you remove this config/mysp.json file as it contains  secret for your service principal.
 
-### 2 - Create Ubuntu VM
+`az role assignment create --assignee "<clientId from previous step>" --role "Contributor" --scope "/subscriptions/<ID of subscription>/ResourceGroups/<resourceGroup where your HDInsight Custom vNet>"`
+
+`az role assignment create --assignee "<clientId from previous step>" --role "Contributor" --scope "/subscriptions/<ID of subscription>/ResourceGroups/NetworkWatcherRG"`
+
+### 3 - Create Ubuntu VM
 - Create an <a href="https://portal.azure.com/?feature.customportal=false#create/canonical.0001-com-ubuntu-server-focal20_04-lts-ARM">Ubuntu Server 20.04 LTS Azure Linux VM</a> in the subnet that you are planning to create the HDInsight cluster, or the subnet that you used for your HDInsight cluster if you created HDInsight cluster already. Also, VM must be created in the same region as your HDInsight cluster. 
 You can use as low as a B1s (1G RAM, 1 vCore) VM size or bigger. When you are done  with HNV, don't forget to delete this VM. If you are planning to use it again, you may want to "Stop" the VM to avoid charges.
 - When creating the VM, be sure that you selected the same VNet/Subnet you are planning to create the HDInsight cluster. 
 - When setting NSG for your VM's NIC card, you should select the same NSG you use in the subnet or "None". If you select your subnet NSG and your subnet NSG does not allow SSH access to TCP 22, you need to add it to your subnet NSG. So you can SSH into the VM.
 
-### 3 - Clone HNV from repo
+### 4 - Clone HNV from repo
 After creating the VM, you need to follow the steps below :
 - SSH into the VM
 - Run the command  below to get the HNV tool:<br>
@@ -79,7 +87,7 @@ After creating the VM, you need to follow the steps below :
   sudo ./setup.sh
   ```
 
-### 4 - Edit `config/params.conf` configuration file with a text editor (like Vi, Nano etc)
+### 5 - Edit `config/params.conf` configuration file with a text editor (like Vi, Nano etc)
 #### For <u>Scenario A (Before creating an HDInsight cluster)</u>, tool expects you to supply the values to the parameters below in `config/params.conf` file:
   - VM_RG_NAME : Resource Group name of the Ubuntu VM
   - PRIMARY_STORAGE : Primary storage acount name (without .blob.core.windows.net , .dfs.core.windows.net etc).
@@ -97,7 +105,7 @@ After creating the VM, you need to follow the steps below :
 - You need to enter CLUSTER_DNS_NAME in `config/params.conf` file. When you ran the tool, it will ask you to enter your HDInsight SSH username and password to be able to SSH into your headnode to gather all the necessary details from your cluster. If you don't want SSH user and password to be asked in your consequent runs, you can put them in CLUSTER_SSHUSER and CLUSTER_SSHUSER_PASS parameters in the `config/params.conf` file. 
 PS : Don't forget to remove all those after you're done using HNV! Better you may want to delete the VM as a whole.
 
-### 5 - Run HNV
+### 6 - Run HNV
 + Now you can use the tool with the command below<br>
 ```
 python3 ./HDInsightNetworkValidator.py
