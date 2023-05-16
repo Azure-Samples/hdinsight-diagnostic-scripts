@@ -362,5 +362,3 @@ HDInsightNetworkValidatorV2/flow.txt
 HDInsightNetworkValidatorV2/doc.md
 HDInsightNetworkValidatorV2/.vscode/**
 HDInsightNetworkValidatorV2/__pycache__/**
-
-HDInsightNetworkValidatorV2/config/ServiceTags_Public_20230508.back
