@@ -45,7 +45,7 @@ You can use as low as a B1s (1G RAM, 1 vCore) for the VM size or bigger. When yo
 ## <a id="usage"></a>Usage:
 ### 1 - Create "Networkwatcher Resource Group": <br>
 You will need to create a resource group for network watchers. Resource Group Name is: 
-- az group create --location <location e.g westus> --resource-group NetworkWatcherRG
+- az group create --location "location e.g westus" --resource-group NetworkWatcherRG
 
 ### 2 - Create "Service Principal": <br>
 You will need to create a "Service Principal" following steps below (or by referring  <a href="https://docs.microsoft.com/en-us/python/api/overview/azure/hdinsight?view=azure-python">here</a> ) : 
@@ -65,9 +65,9 @@ PS : If you receive a permission error after running the commands above, you nee
 When running tool, it will ask you to paste this service principal JSON in each run. If you prefer, you can save the output JSON into a file like "config/mysp.json" and set SP_JSON_FILE="config/mysp.json" in config/params.conf file. So HNV will read the service principal details from the file. 
 After you're done with the tool, you need to make sure that you remove this config/mysp.json file as it contains  secret for your service principal.
 
-`az role assignment create --assignee "<clientId from previous step>" --role "Contributor" --scope "/subscriptions/<ID of subscription>/ResourceGroups/<resourceGroup where your HDInsight Custom vNet>"`
+`az role assignment create --assignee "<clientId from previous step>" --role "Contributor" --scope "/subscriptions/<ID of subscription>/ResourceGroups/resourceGroup where your HDInsight Custom vNet>"`
 
-`az role assignment create --assignee "<clientId from previous step>" --role "Contributor" --scope "/subscriptions/<ID of subscription>/ResourceGroups/NetworkWatcherRG"`
+az role assignment create --assignee "71f00320-08cc-48d6-8850-098a8c243eb0" --role "Contributor" --scope "/subscriptions/<>/ResourceGroups/NetworkWatcherRG"
 
 ### 3 - Create Ubuntu VM
 - Create an <a href="https://portal.azure.com/?feature.customportal=false#create/canonical.0001-com-ubuntu-server-focal20_04-lts-ARM">Ubuntu Server 20.04 LTS Azure Linux VM</a> in the subnet that you are planning to create the HDInsight cluster, or the subnet that you used for your HDInsight cluster if you created HDInsight cluster already. Also, VM must be created in the same region as your HDInsight cluster. 
