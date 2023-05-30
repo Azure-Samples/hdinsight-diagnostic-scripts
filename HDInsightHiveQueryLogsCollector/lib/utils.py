@@ -7,6 +7,7 @@ import subprocess
 
 from progress.spinner import Spinner
 from colorama import *
+from halo import Halo
 
 from xml.etree.ElementTree import *
 
@@ -71,7 +72,6 @@ def showTextWithIcon(self, theText, theSpinner="line", iconType="info", iconPlac
     spinner = Halo(text=theText, spinner="line", placement=iconPlacement)
     spinner.start()
     if iconType == "info":
-        # spinner.info()  #.info() generates "i" icon in "Blue". To be able to change the color, using .stop_and_persist()
         spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=theText)
         self.logger.info(theText)
     elif iconType == "warn":
