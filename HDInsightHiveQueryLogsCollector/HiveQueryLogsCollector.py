@@ -1,5 +1,5 @@
 import logging
-from HDInsightHiveQueryLogsCollector.lib.utils import *
+from lib.utils import *
 
 
 
