@@ -1,6 +1,6 @@
 import logging
-from lib.utils import *
-import keyboard
+from HDInsightHiveQueryLogsCollector.lib.utils import *
+
 
 
 class HDInsightQueryLogsCollector:
