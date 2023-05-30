@@ -68,32 +68,6 @@ def getHostName():
     hostname = executeCommand("hostname", "", False)
     return hostname.strip()
 
-def showTextWithIcon(self, theText, theSpinner="line", iconType="info", iconPlacement="left"):
-    spinner = Halo(text=theText, spinner="line", placement=iconPlacement)
-    spinner.start()
-    if iconType == "info":
-        spinner.stop_and_persist(symbol=Fore.GREEN + "ℹ" + Fore.RESET, text=theText)
-        self.logger.info(theText)
-    elif iconType == "warn":
-        spinner.warn()
-        self.logger.warn(theText)
-    elif iconType == "succeed":
-        spinner.succeed()
-        self.logger.info(theText)
-    elif iconType == "fail":
-        spinner.fail()
-        self.logger.warn(theText)
-    elif iconType == "result_success":
-        # spinner.stop_and_persist(symbol='🦄'.encode('utf-8'))
-        spinner.stop_and_persist(symbol="\U0001f44D".encode("utf-8"))  # Thumbs up sign
-        self.logger.info(theText)
-    elif iconType == "result_fail":
-        spinner.stop_and_persist(symbol="\U0001f44E".encode("utf-8"))  # Thumbs down sign
-        self.logger.info(theText)
-
-    if self.verboseMode:
-        print("")
-
 def printAndLog(self, msg, logLevel="INFO", end="x"):
     if msg != "\n":
         if end == " ":
