@@ -1,5 +1,5 @@
 import logging
-from libs.utils import *
+from lib.utils import *
 import keyboard
 
 
@@ -88,7 +88,7 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Query execution completed.")
         printAndLog(self, "-------------------------------")
-        
+
 hnv = HDInsightQueryLogsCollector()
 if len(sys.argv) > 1:
     if sys.argv[1] == "-v":
