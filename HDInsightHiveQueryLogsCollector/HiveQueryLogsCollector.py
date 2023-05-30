@@ -83,7 +83,7 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "Executing the query ...")
         printAndLog(self, "-------------------------------")
         
-        result = executeCommand("usr/bin/hive", "-n '' -p '' -f ./results/output/query.hql")
+        result = executeCommand("/usr/bin/hive", "-n '' -p '' -f ./results/output/query.hql")
         saveTextToFile(self, result, "./results/output/query_result.txt")
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Query execution completed.")
