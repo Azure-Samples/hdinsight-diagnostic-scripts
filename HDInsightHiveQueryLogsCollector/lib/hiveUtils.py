@@ -12,7 +12,8 @@ def generateHiveSetV(self):
 
 def executeHiveQuery(self, query, outputFileName):
     #executeCommand("/usr/bin/hive", "--outputformat=csv2 -n '' -p '' -e '{query}' > ./results/output/{outputFileName}".format(query=query, outputFileName=outputFileName)) 
-    executeCommand("/usr/bin/hive", "-n '' -p '' -e '{query}'".format(query=query) 
+    executeCommand("/usr/bin/hive", "-n '' -p '' -e '{query}'".format(query=query))
+
 def executeQueryExplain(self, query):
     # find the query without use or set;
     statements = query.split(';')
