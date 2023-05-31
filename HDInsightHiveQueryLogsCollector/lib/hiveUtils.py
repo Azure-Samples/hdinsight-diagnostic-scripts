@@ -23,12 +23,12 @@ def executeQueryExplain(self, query):
     statements = query.split(';')
     for s in statements:
         print(f"Statement: {s}")
-        if s.lower().startswith('use') or s.lower().startswith('set'):
-            explainQuery = ";".join(explainQuery, s) 
+        if s.lower().strip().startswith('use') or s.lower().strip().startswith('set'):
+            explainQuery = ";".join(explainQuery, s.strip()) 
             print(f"explainQuery: {explainQuery}")
             continue
         else:
-            explain = f"EXPLAIN {s}"
+            explain = f"EXPLAIN {s.strip()}"
             print(f"explain: {explain}")
             explainQuery = ";".join([explainQuery, explain])
             print(f"explainQuery final after join: {explainQuery}") 
