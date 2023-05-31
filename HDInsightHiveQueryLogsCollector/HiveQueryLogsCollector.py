@@ -106,6 +106,13 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Executing set V completed.")
         printAndLog(self, "-------------------------------")
+        printAndLog(self, "-------------------------------")
+        printAndLog(self, "Executing Explain Query ...")
+        printAndLog(self, "-------------------------------")
+        executeQueryExplain(self, self.query)
+        printAndLog(self, "-------------------------------")
+        printAndLog(self, "Executing Explain Query completed.")
+        printAndLog(self, "-------------------------------")
         
 hnv = HDInsightQueryLogsCollector()
 if len(sys.argv) > 1:
