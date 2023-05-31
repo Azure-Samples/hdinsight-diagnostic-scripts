@@ -2,8 +2,8 @@ import logging
 import datetime
 from lib.utils import *
 
-def executeHiveHql(self, hqlFile):
-    params = "-n '' -p '' -f {hqlFile}".format(hqlFile = hqlFile)
+def executeHiveHql(self, hqlFile, outputfileName):
+    params = f"-n '' -p '' -f {hqlFile} > {outputfileName}"
     result = executeCommand("/usr/bin/hive", params)
     return result
 
@@ -11,8 +11,7 @@ def generateHiveSetV(self):
     executeHiveQuery(self, 'set -v', "setV.out") 
 
 def executeHiveQuery(self, query, outputFileName):
-    #executeCommand("/usr/bin/hive", "--outputformat=csv2 -n '' -p '' -e '{query}' > ./results/output/{outputFileName}".format(query=query, outputFileName=outputFileName)) 
-    executeCommand("/usr/bin/hive", "-n '' -p '' -e '{query}'".format(query=query))
+    executeCommand("/usr/bin/hive", "--outputformat=csv2 -n '' -p '' -e '{query}' > ./results/output/{outputFileName}".format(query=query, outputFileName=outputFileName)) 
 
 def executeQueryExplain(self, query):
     explainQuery = ""
@@ -39,5 +38,5 @@ def executeQueryExplain(self, query):
     # replace newline with spaces;
     printAndLog(self, "Explain Query: {explainQuery}".format(explainQuery=explainQuery))
     saveTextToFile(self, explainQuery, "./results/output/explainQuery.hql")
-    result = executeHiveHql(self, "./results/output/explainQuery.hql")
-    saveTextToFile(self, result, "./results/output/explainQuery.out")
+    result = executeHiveHql(self, "./results/output/explainQuery.hql", "./results/output/explainQuery.out")
+    printAndLog(self, "Explain Query Result: {result}".format(result=result), logLevel="DEBUG")
