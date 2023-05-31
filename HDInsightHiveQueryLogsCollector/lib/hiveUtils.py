@@ -22,7 +22,7 @@ def executeQueryExplain(self, query):
         else:
             s = "EXPLAIN {s}".format(s=s)
     
-    explainQuery = statements.join(';') 
+    explainQuery = ";".join(statements) 
     # replace newline with spaces;
     explainQuery = explainQuery.replace('\n', ' ')
     executeHiveQuery(self, explainQuery, "explainQuery.out")
