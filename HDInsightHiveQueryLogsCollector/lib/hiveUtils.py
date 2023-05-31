@@ -24,7 +24,7 @@ def executeQueryExplain(self, query):
             continue
         else:
             explain = "EXPLAIN {s}".format(s=s)
-            explainQuery = ";".join(explainQuery, explain) 
+            explainQuery = ";".join([explainQuery, explain]) 
 
     explainQuery = ";".join(statements) 
     # replace newline with spaces;
