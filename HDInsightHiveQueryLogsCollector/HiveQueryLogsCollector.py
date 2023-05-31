@@ -15,7 +15,7 @@ class HDInsightQueryLogsCollector:
     logger = ""
     executionStartTime = ""
     executionEndTime = ""
-
+    
     def initializeLogger(self):
         """Initialize and return the logger object"""
         logger = logging.getLogger(__name__)
@@ -75,11 +75,11 @@ class HDInsightQueryLogsCollector:
                 line = input()
                 if line == "EOF":
                     break
-                self.query = '\n'.join([self.query,line])
+                query = '\n'.join([query,line])
             except EOFError:
                 break
         
-        saveTextToFile(self, self.query, "./results/output/query.hql")
+        saveTextToFile(self, query, "./results/output/query.hql")
 
         # Execute the query
         printAndLog(self, "-------------------------------")
@@ -108,7 +108,7 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Executing Explain Query ...")
         printAndLog(self, "-------------------------------")
-        executeQueryExplain(self, self.query)
+        executeQueryExplain(self, query)
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Executing Explain Query completed.")
         printAndLog(self, "-------------------------------")
