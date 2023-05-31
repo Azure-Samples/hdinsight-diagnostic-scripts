@@ -1,4 +1,5 @@
 import logging
+import datetime
 from lib.utils import *
 
 
@@ -11,6 +12,8 @@ class HDInsightQueryLogsCollector:
     # Parameters dictionary
     params = {}
     logger = ""
+    executionStartTime = ""
+    executionEndTime = ""
     
     def initializeLogger(self):
         """Initialize and return the logger object"""
@@ -59,7 +62,7 @@ class HDInsightQueryLogsCollector:
         # --------MAIN MENU---------------
         which_validations = ""
         query = ""
-        # if self.verboseMode:
+
         printAndLog(self, "Which Query Issue scenario you are facing? : ")
         printAndLog(self, '1 - Query Fails and never worked before (running for the first time)')
         which_validations = input()
@@ -83,12 +86,26 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "Executing the query ...")
         printAndLog(self, "-------------------------------")
         
-        result = executeCommand("/usr/bin/hive", "-n '' -p '' -f ./results/output/query.hql")
+        self.executionStartTime = datetime.datetime.now()
+        result = executeHiveHql(self, "./results/output/query.hql")
         saveTextToFile(self, result, "./results/output/query_result.txt")
+        
+        self.executionEndTime = datetime.datetime.now()
+
+        printAndLog(self, "Execution Result:")
+        printAndLog(self, result, logLevel="INFO")
+
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Query execution completed.")
         printAndLog(self, "-------------------------------")
-
+        printAndLog(self, "-------------------------------")
+        printAndLog(self, "Executing set V command ...")
+        printAndLog(self, "-------------------------------")
+        generateHiveSetV(self)
+        printAndLog(self, "-------------------------------")
+        printAndLog(self, "Executing set V completed.")
+        printAndLog(self, "-------------------------------")
+        
 hnv = HDInsightQueryLogsCollector()
 if len(sys.argv) > 1:
     if sys.argv[1] == "-v":
