@@ -43,6 +43,7 @@ class HDInsightQueryLogsCollector:
 
 
     def main(self):
+        query = ""
         self.createFolderStructure()
            # Initialize logger
         self.logger = initializeLogger(self)
