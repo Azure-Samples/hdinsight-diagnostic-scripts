@@ -33,6 +33,7 @@ def executeQueryExplain(self, query):
             explain = f"EXPLAIN {s.strip()}"
             print(f"explain: {explain}")
             explainQuery = ";".join([explainQuery, explain])
+            explainQuery = f"{explainQuery};"
             print(f"explainQuery final after join: {explainQuery}") 
 
     # replace newline with spaces;
