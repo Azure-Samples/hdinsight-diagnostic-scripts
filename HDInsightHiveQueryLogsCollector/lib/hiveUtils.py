@@ -3,7 +3,7 @@ import datetime
 from lib.utils import *
 
 def executeHiveHql(self, hqlFile):
-    params = "-n '' -p '' -f {hqlFile}".format(hqlFile)
+    params = "-n '' -p '' -f {hqlFile}".format(hqlFile = hqlFile)
     result = executeCommand("/usr/bin/hive", params)
     return result
 
