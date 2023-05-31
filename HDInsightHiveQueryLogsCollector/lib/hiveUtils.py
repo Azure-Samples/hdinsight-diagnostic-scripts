@@ -1,6 +1,6 @@
 import logging
 import datetime
-from utils import *
+from lib.utils import *
 
 def executeHiveHql(self, hqlFile):
     params = "-n '' -p '' -f {hqlFile}".format(hqlFile)
