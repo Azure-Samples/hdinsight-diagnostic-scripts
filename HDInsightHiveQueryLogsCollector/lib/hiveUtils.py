@@ -17,6 +17,9 @@ def executeHiveQuery(self, query, outputFileName):
 def executeQueryExplain(self, query):
     explainQuery = ""
     # find the query without use or set;
+    query = query.replace('\n', ' ')
+    print(f"query: {query}")
+
     statements = query.split(';')
     for s in statements:
         print(f"Statement: {s}")
@@ -31,6 +34,5 @@ def executeQueryExplain(self, query):
             print(f"explainQuery final after join: {explainQuery}") 
 
     # replace newline with spaces;
-    explainQuery = explainQuery.replace('\n', ' ')
     printAndLog(self, "Explain Query: {explainQuery}".format(explainQuery=explainQuery))
     executeHiveQuery(self, explainQuery, "explainQuery.out")
