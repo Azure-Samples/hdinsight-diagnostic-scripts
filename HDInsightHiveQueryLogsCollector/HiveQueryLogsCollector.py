@@ -88,8 +88,8 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "-------------------------------")
         
         self.executionStartTime = datetime.datetime.now()
-        result = executeHiveHql(self, "./results/output/query.hql", "./results/output/query_result.txt")
-        
+        result = executeHiveHql(self, "./results/output/query.hql", "./results/output/query_result.out")
+        saveTextToFile(self, result, "./results/output/queryexecution.out")
         self.executionEndTime = datetime.datetime.now()
 
         printAndLog(self, "Execution Result:")
