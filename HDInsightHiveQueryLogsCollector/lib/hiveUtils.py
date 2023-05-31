@@ -27,6 +27,8 @@ def executeQueryExplain(self, query):
             explainQuery = ";".join([explainQuery, s.strip()]) 
             print(f"explainQuery: {explainQuery}")
             continue
+        elif s.strip() =="":
+            continue
         else:
             explain = f"EXPLAIN {s.strip()}"
             print(f"explain: {explain}")
