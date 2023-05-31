@@ -37,4 +37,6 @@ def executeQueryExplain(self, query):
 
     # replace newline with spaces;
     printAndLog(self, "Explain Query: {explainQuery}".format(explainQuery=explainQuery))
-    executeHiveQuery(self, explainQuery, "explainQuery.out")
+    saveTextToFile(self, explainQuery, "./results/output/explainQuery.hql")
+    result = executeHiveHql(self, "./results/output/explainQuery.hql")
+    saveTextToFile(self, result, "./results/output/explainQuery.out")
