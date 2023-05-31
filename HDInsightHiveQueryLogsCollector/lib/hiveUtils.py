@@ -19,14 +19,16 @@ def executeQueryExplain(self, query):
     # find the query without use or set;
     statements = query.split(';')
     for s in statements:
-        if s.startswith('use') or s.startswith('set'):
+        print(f"Statement: {s}")
+        if s.lower().startswith('use') or s.lower().startswith('set'):
             explainQuery = ";".join(explainQuery, s) 
-            print(explainQuery)
+            print(f"explainQuery: {explainQuery}")
             continue
         else:
-            explain = "EXPLAIN {s}".format(s=s)
+            explain = f"EXPLAIN {s}"
+            print(f"explain: {explain}")
             explainQuery = ";".join([explainQuery, explain])
-            print(explainQuery) 
+            print(f"explainQuery final after join: {explainQuery}") 
 
     # replace newline with spaces;
     explainQuery = explainQuery.replace('\n', ' ')
