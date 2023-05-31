@@ -15,6 +15,7 @@ def executeHiveQuery(self, query, outputFileName):
     executeCommand("/usr/bin/hive", "-n '' -p '' -e '{query}'".format(query=query))
 
 def executeQueryExplain(self, query):
+    explainQuery = ""
     # find the query without use or set;
     statements = query.split(';')
     for s in statements:
