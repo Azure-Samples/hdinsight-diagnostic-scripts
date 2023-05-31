@@ -25,7 +25,5 @@ def executeQueryExplain(self, query):
     explainQuery = ";".join(statements) 
     # replace newline with spaces;
     explainQuery = explainQuery.replace('\n', ' ')
+    printAndLog(self, "Explain Query: {explainQuery}".format(explainQuery=explainQuery))
     executeHiveQuery(self, explainQuery, "explainQuery.out")
-
-
-    executeHiveQuery(self, '{query}' , "explainQuery.out") 
