@@ -1,10 +1,14 @@
 from sql_metadata import Parser
 from lib.utils import *
+import re
 
 def executeHiveHql(self, hqlFile, outputfileName):
+    applicationId = ""
     params = f"-n '' -p '' -f {hqlFile} > {outputfileName}"
     result = executeCommand("/usr/bin/hive", params)
-    return result
+    applicationId = re.search("application_[0-9]{13}_[0-9]{4}", result)
+
+    return result, applicationId
 
 def generateHiveSetV(self):
     executeHiveQuery(self, 'set -v', "setV.out") 
@@ -37,9 +41,9 @@ def executeQueryExplain(self, query):
             explainQuery = f"{explainQuery};"
 
     # replace newline with spaces;
-    saveTextToFile(self, explainQuery, "./results/output/explainQuery.hql")
-    result = executeHiveHql(self, "./results/output/explainQuery.hql", "./results/output/explainQuery.out")
-    saveTextToFile(self, result, "./results/output/explainQuery_result.out")
+    saveTextToFile(self, explainQuery, "./results/output/explain_query.hql")
+    result, appId = executeHiveHql(self, "./results/output/explain_query.hql", "./results/output/explain_query_result.out")
+    saveTextToFile(self, result, "./results/output/explain_query_beelinetrace.out")
 
     return useStatement, queryWithoutUseSet, result
 
@@ -53,6 +57,10 @@ def executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet):
         if useStatement != "":
             query = f"{useStatement};{query}"
         
-        saveTextToFile(self, query, f"./results/output/{table}_Definition.hql")
-        result = executeHiveHql(self, f"./results/output/{table}_Definition.hql", f"./results/output/{table}Definition.out")
-        saveTextToFile(self, result, f"./results/output/{table}_Definition_result.out")
+        saveTextToFile(self, query, f"./results/output/{table}_definition.hql")
+        result, appId = executeHiveHql(self, f"./results/output/{table}_definition.hql", f"./results/output/{table}_dfinition.out")
+        saveTextToFile(self, result, f"./results/output/{table}_definition_beelinetrace.out")
+
+
+def getYarnApplicationLog(self, appId):
+    executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > ./results/output/yarn_{appId}.out")

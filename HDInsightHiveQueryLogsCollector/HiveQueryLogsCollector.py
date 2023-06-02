@@ -80,7 +80,7 @@ class HDInsightQueryLogsCollector:
             except EOFError:
                 break
         
-        saveTextToFile(self, query, "./results/output/query.hql")
+        saveTextToFile(self, query, "./results/output/input_query.hql")
 
         # Execute the query
         printAndLog(self, "-------------------------------")
@@ -88,8 +88,8 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "-------------------------------")
         
         self.executionStartTime = datetime.datetime.now()
-        result = executeHiveHql(self, "./results/output/query.hql", "./results/output/query_result.out")
-        saveTextToFile(self, result, "./results/output/queryexecution.out")
+        result, appId = executeHiveHql(self, "./results/output/input_query.hql", "./results/output/query_result.out")
+        saveTextToFile(self, result, "./results/output/query_beelinetrace.out")
         self.executionEndTime = datetime.datetime.now()
 
         printAndLog(self, "Execution Result:")
@@ -97,6 +97,13 @@ class HDInsightQueryLogsCollector:
 
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Query execution completed.")
+        printAndLog(self, "-------------------------------")
+        printAndLog(self, "-------------------------------")
+        printAndLog(self, "Getting Yarn Application Log ...")
+        printAndLog(self, "-------------------------------")
+        getYarnApplicationLog(self, appId)
+        printAndLog(self, "-------------------------------")
+        printAndLog(self, "Getting Yarn Application Log Completed.")
         printAndLog(self, "-------------------------------")
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Executing set V command ...")
