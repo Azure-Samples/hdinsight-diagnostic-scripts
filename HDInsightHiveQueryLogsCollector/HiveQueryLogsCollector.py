@@ -99,7 +99,7 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "Query execution completed.")
         printAndLog(self, "-------------------------------")
         printAndLog(self, "-------------------------------")
-        printAndLog(self, "Getting Yarn Application Log ...")
+        printAndLog(self, f"Getting Yarn Application Log for {appId} ...")
         printAndLog(self, "-------------------------------")
         getYarnApplicationLog(self, appId)
         printAndLog(self, "-------------------------------")

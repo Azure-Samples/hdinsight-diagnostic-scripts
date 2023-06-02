@@ -7,8 +7,9 @@ def executeHiveHql(self, hqlFile, outputfileName):
     params = f"-n '' -p '' -f {hqlFile} > {outputfileName}"
     result = executeCommand("/usr/bin/hive", params)
     applicationId = re.search("application_[0-9]{13}_[0-9]{4}", result)
-
-    return result, applicationId
+    if applicationId is None:
+        printAndLog(self, "Application Id not found in the result.", logLevel="ERROR")
+    return result, applicationId.group(0)
 
 def generateHiveSetV(self):
     executeHiveQuery(self, 'set -v', "setV.out") 
