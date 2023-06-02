@@ -55,4 +55,4 @@ def executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet):
         
         saveTextToFile(self, query, f"./results/output/{table}_Definition.hql")
         result = executeHiveHql(self, f"./results/output/{table}_Definition.hql", f"./results/output/{table}Definition.out")
-        saveTextToFile(self, result, f"./results/output/{table}_Definition_result.out"
+        saveTextToFile(self, result, f"./results/output/{table}_Definition_result.out")
