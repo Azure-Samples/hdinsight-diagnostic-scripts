@@ -2,16 +2,19 @@ from sql_metadata import Parser
 from lib.utils import *
 import re
 
-def executeHiveHql(self, hqlFile, outputfileName):
+def executeHiveHql(self, hqlFile, outputfileName, getApplicationId = False):
     applicationId = ""
     params = f"-n '' -p '' -f {hqlFile} > {outputfileName}"
     result = executeCommand("/usr/bin/hive", params)
-    applicationId = re.search("application_[0-9]{13}_[0-9]{4}", result)
-    print(applicationId)
-    if applicationId is None:
-        printAndLog(self, "Application Id not found in the result.", logLevel="ERROR")
-    return result, applicationId.group()
 
+    if getApplicationId:
+        applicationId = re.search("application_[0-9]{13}_[0-9]{4}", result)
+        if applicationId is None:
+            printAndLog(self, "Application Id not found in the result.", logLevel="ERROR")
+        return result, applicationId.group()
+    else:
+        return result, ""
+    
 def generateHiveSetV(self):
     executeHiveQuery(self, 'set -v', "setV.out") 
 
