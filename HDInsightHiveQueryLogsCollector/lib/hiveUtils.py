@@ -63,4 +63,4 @@ def executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet):
 
 
 def getYarnApplicationLog(self, appId):
-    executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > ./results/output/yarn_{appId}.out")
+    executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > ./results/logs/{appId}.log")
