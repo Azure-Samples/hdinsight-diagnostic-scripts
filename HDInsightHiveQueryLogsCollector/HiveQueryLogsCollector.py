@@ -108,10 +108,18 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Executing Explain Query ...")
         printAndLog(self, "-------------------------------")
-        executeQueryExplain(self, query)
+        useStatement, queryWithoutUseSet, result = executeQueryExplain(self, query)
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Executing Explain Query completed.")
         printAndLog(self, "-------------------------------")
+        printAndLog(self, "-------------------------------")
+        printAndLog(self, "Getting Tables Definition...")
+        printAndLog(self, "-------------------------------")
+        executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet)
+        printAndLog(self, "-------------------------------")
+        printAndLog(self, "Getting Tables Definition completed.")
+        printAndLog(self, "-------------------------------")
+
         
 hnv = HDInsightQueryLogsCollector()
 if len(sys.argv) > 1:
