@@ -1,4 +1,4 @@
-# HDInsight Network Validator (aka HNV) v2.0
+# HDInsight Hive Query Diagnostics Tool
 
 ## Table of Contents
 <li> <a href="#what">What is HiveQueryLogsCollector ?</a> 
