@@ -30,6 +30,8 @@ class HDInsightQueryLogsCollector:
         return logger
 
     def createFolderStructure(self):
+        #TODO: Add timestamp to results folder
+        #TODO: Add Folder Paths to vars
         # currentFolder
         #   - results
         #       - logs
@@ -126,7 +128,15 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Getting Tables Definition completed.")
         printAndLog(self, "-------------------------------")
+        #TODO: Get etc/hosts file
+        self.hn0, self.hn1 = getHiveServerHostnames(self)
+        printAndLog(self, "hn0: " + self.hn0)
+        printAndLog(self, "hn1: " + self.hn1)
 
+        #TODO: Collect HiveSerevr2 logs
+        #TODO: Collect HiveInteractiveServer logs
+        #TODO: Collect Hive Metatsore logs
+        #TODO: Compress results and display link to compressed file
         
 hnv = HDInsightQueryLogsCollector()
 if len(sys.argv) > 1:

@@ -1,5 +1,6 @@
 import os
 from os import path
+import re
 import sys
 import logging
 import logging.handlers
@@ -67,6 +68,21 @@ def getHostName():
     """Get current VM's hostname by executing hostname command"""
     hostname = executeCommand("hostname", "", False)
     return hostname.strip()
+
+def getHeadnodesHostnames(self):
+    hosts_file = open("/etc/hosts", "r")
+    hosts_content = hosts_file.read()
+    hosts_file.close()
+    #regex 
+    hn_matches = re.findall("\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}\s*(hn[02|01]-\w*)", hosts_content)
+    if hn_matches is None:
+        printAndLog(self,  "ERROR: Cannot find headnodes' hostnames in /etc/hosts file", "ERROR")
+        return "", ""
+    else:
+        hn0 = hn_matches[0]
+        hn1 = hn_matches[1]
+
+    return hn0, hn1
 
 def printAndLog(self, msg, logLevel="INFO", end="x"):
     if msg != "\n":
