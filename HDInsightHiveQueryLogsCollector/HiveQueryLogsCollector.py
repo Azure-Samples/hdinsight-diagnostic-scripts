@@ -3,7 +3,6 @@ import datetime
 from lib.utils import *
 from lib.hiveUtils import *
 import pwinput
-import pwinput
 
 class HDInsightQueryLogsCollector:
 # Globals
@@ -137,13 +136,8 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "-------------------------------")
         username = input("Whats your username?")
         password = pwinput.pwinput("Whats your password?", mask='*')
-        sftp = pysftp.Connection(self.hn0, username=username, password=password)
-        if sftp.isfile('/var/log/hive/hiveserver2.log'):
-            printAndLog(self, f"Getting file: /var/log/hive/hiveserver2.log from {self.hn0}")
-            sftp.get('/var/log/hive/hiveserver2.log', './results/logs/hiveserver2.log')
-
-        sftp.close()    # close your connection to hostname
-
+        getHiveLogs (self, username= username, password=password, host=self.hn0) # close your connection to hostname
+        getHiveLogs (self, username= username, password=password, host=self.hn1) # close your connection to hostname
 
         #TODO: Collect HiveSerevr2 logs
         #TODO: Collect HiveInteractiveServer logs

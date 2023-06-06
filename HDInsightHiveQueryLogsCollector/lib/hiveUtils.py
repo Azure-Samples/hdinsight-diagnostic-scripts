@@ -1,6 +1,8 @@
 from sql_metadata import Parser
 from lib.utils import *
 import re
+import pysftp
+
 
 def executeHiveHql(self, hqlFile, outputfileName, getApplicationId = False):
     applicationId = ""
@@ -71,3 +73,20 @@ def executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet):
 
 def getYarnApplicationLog(self, appId):
     executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > ./results/logs/{appId}.log")
+
+def getHiveLogs(self, username, password, host):
+    createFolder(self, f"./results/logs/{host}")
+    sftp = pysftp.Connection(self.hn0, username=username, password=password)
+    if sftp.isfile('/var/log/hive/hiveserver2.log'):
+        printAndLog(self, f"Getting file: /var/log/hive/hiveserver2.log from {host}")
+        sftp.get('/var/log/hive/hiveserver2.log', f'./results/logs/{host}/hiveserver2.log')
+
+    if sftp.isfile('/var/log/hive/hivemetastore.log'):
+        printAndLog(self, f"Getting file: /var/log/hive/hivemetastore.log from {host}")
+        sftp.get('/var/log/hive/hivemetastore.log', f'./results/logs/{host}/hivemetastore.log')
+
+    if sftp.isfile('/var/log/hive/hiveserver2Interactive.log'):
+        printAndLog(self, f"Getting file: /var/log/hive/hiveserver2Interactive.log from {host}")
+        sftp.get('/var/log/hive/hiveserver2Interactive.log', f'./results/logs/{host}/hiveserver2Interactive.log')
+
+    sftp.close()   
