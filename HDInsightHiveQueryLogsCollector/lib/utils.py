@@ -81,7 +81,6 @@ def getHeadnodesHostnames(self):
     else:
         hn0 = hn_matches[0]
         hn1 = hn_matches[1]
-
     return hn0, hn1
 
 def printAndLog(self, msg, logLevel="INFO", end="x"):

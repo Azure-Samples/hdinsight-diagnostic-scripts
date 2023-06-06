@@ -3,8 +3,6 @@ import datetime
 from lib.utils import *
 from lib.hiveUtils import *
 
-
-
 class HDInsightQueryLogsCollector:
 # Globals
     scriptVersion = "0.0.1"
@@ -128,7 +126,7 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Getting Tables Definition completed.")
         printAndLog(self, "-------------------------------")
-        #TODO: Get etc/hosts file
+        #Get etc/hosts file
         self.hn0, self.hn1 = getHiveServerHostnames(self)
         printAndLog(self, "hn0: " + self.hn0)
         printAndLog(self, "hn1: " + self.hn1)
