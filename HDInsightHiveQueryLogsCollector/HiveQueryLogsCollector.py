@@ -127,7 +127,7 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "Getting Tables Definition completed.")
         printAndLog(self, "-------------------------------")
         #Get etc/hosts file
-        self.hn0, self.hn1 = getHiveServerHostnames(self)
+        self.hn0, self.hn1 = getHeadnodesHostnames(self)
         printAndLog(self, "hn0: " + self.hn0)
         printAndLog(self, "hn1: " + self.hn1)
 
