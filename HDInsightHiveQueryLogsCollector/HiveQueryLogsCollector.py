@@ -131,6 +131,9 @@ class HDInsightQueryLogsCollector:
         self.hn0, self.hn1 = getHeadnodesHostnames(self)
         printAndLog(self, "hn0: " + self.hn0)
         printAndLog(self, "hn1: " + self.hn1)
+        #Collect HiveSerevr2 logs
+        #Collect HiveInteractiveServer logs
+        #Collect Hive Metatsore logs
         printAndLog(self, "-------------------------------")
         printAndLog(self, "Getting Hive Server 2/Hive Metastore and Hive Interactive logs from both headnodes.")
         printAndLog(self, "-------------------------------")
@@ -139,10 +142,12 @@ class HDInsightQueryLogsCollector:
         getHiveLogs (self, username= username, password=password, host=self.hn0) # close your connection to hostname
         getHiveLogs (self, username= username, password=password, host=self.hn1) # close your connection to hostname
 
-        #TODO: Collect HiveSerevr2 logs
-        #TODO: Collect HiveInteractiveServer logs
-        #TODO: Collect Hive Metatsore logs
-        #TODO: Compress results and display link to compressed file
+        #Compress results and display link to compressed file
+        CompressFolder(self, "./results", "./results.zip")
+
+        printAndLog(self, "-------------------------------")    
+        printAndLog(self, "Results are saved in ./results.zip")
+        printAndLog(self, "-------------------------------")
         
 hnv = HDInsightQueryLogsCollector()
 if len(sys.argv) > 1:

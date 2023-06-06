@@ -5,6 +5,10 @@ import sys
 import logging
 import logging.handlers
 import subprocess
+if sys.version_info >= (3, 7):
+    import zipfile
+else:
+    import zipfile37 as zipfile
 
 from progress.spinner import Spinner
 from colorama import *
@@ -113,3 +117,15 @@ def createFolder(self, folderName, path="./"):
 def saveTextToFile(self, text, file_path):
     with open(file_path, 'w') as file:
         file.write(text)  # Write the text to the file
+
+def CompressFolder(self, folderPath, zipFilePath):
+    """Compress the given folder into a zip file"""
+    try:
+        zipf = zipfile.ZipFile(zipFilePath, 'w', zipfile.ZIP_DEFLATED)
+        for root, dirs, files in os.walk(folderPath):
+            for file in files:
+                zipf.write(os.path.join(root, file))
+        zipf.close()
+    except Exception as e:
+        printAndLog(self, f"ERROR: An error occurred while compressing the folder: {e}", "ERROR")
+        sys.exit()
