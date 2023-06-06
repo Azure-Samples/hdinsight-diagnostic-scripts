@@ -363,4 +363,4 @@ HDInsightNetworkValidatorV2/doc.md
 HDInsightNetworkValidatorV2/.vscode/**
 HDInsightNetworkValidatorV2/__pycache__/**
 .vscode/**
-results/**
+results/
