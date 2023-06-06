@@ -76,7 +76,9 @@ def getYarnApplicationLog(self, appId):
 
 def getHiveLogs(self, username, password, host):
     createFolder(self, f"./results/logs/{host}")
-    sftp = pysftp.Connection(self.hn0, username=username, password=password)
+    cnopts = pysftp.CnOpts()
+    cnopts.hostkeys = None
+    sftp = pysftp.Connection(self.hn0, username=username, password=password, cnopts= cnopts)
     if sftp.isfile('/var/log/hive/hiveserver2.log'):
         printAndLog(self, f"Getting file: /var/log/hive/hiveserver2.log from {host}")
         sftp.get('/var/log/hive/hiveserver2.log', f'./results/logs/{host}/hiveserver2.log')
