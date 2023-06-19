@@ -65,11 +65,11 @@ class HDInsightQueryLogsCollector:
         # --------MAIN MENU---------------
         which_validations = ""
 
-        printAndLog(self, "Which Query Issue scenario you are facing? : ")
-        printAndLog(self, '1 - Query Fails and never worked before (running for the first time)')
-        which_validations = input()
-        if which_validations == "":
-            which_validations = "1"
+        #printAndLog(self, "Which Query Issue scenario you are facing? : ")
+        #printAndLog(self, '1 - Query Fails and never worked before (running for the first time)')
+        #which_validations = input()
+        #if which_validations == "":
+        #    which_validations = "1"
         
         printAndLog(self, "Enter/Paste your Query. When done type EOF to terminate the query: ")
         while True:
@@ -84,9 +84,9 @@ class HDInsightQueryLogsCollector:
         saveTextToFile(self, query, "./results/output/input_query.hql")
 
         # Execute the query
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Executing the query ...")
-        printAndLog(self, "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Executing the query ...")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
         
         self.executionStartTime = datetime.datetime.now()
         result, appId = executeHiveHql(self, "./results/output/input_query.hql", "./results/output/query_result.out", getApplicationId=True)
@@ -96,47 +96,47 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, "Execution Result:")
         printAndLog(self, result, logLevel="DEBUG")
 
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Query execution completed.")
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, f"Getting Yarn Application Log for {appId} ...")
-        printAndLog(self, "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Query execution completed.")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + f"Getting Yarn Application Log for {appId} ...")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
         getYarnApplicationLog(self, appId)
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Getting Yarn Application Log Completed.")
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Executing set V command ...")
-        printAndLog(self, "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Getting Yarn Application Log Completed.")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Executing set V command ...")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
         generateHiveSetV(self)
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Executing set V completed.")
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Executing Explain Query ...")
-        printAndLog(self, "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Executing set V completed.")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Executing Explain Query ...")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
         useStatement, queryWithoutUseSet, result = executeQueryExplain(self, query)
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Executing Explain Query completed.")
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Getting Tables Definition...")
-        printAndLog(self, "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Executing Explain Query completed.")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Getting Tables Definition...")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
         executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet)
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Getting Tables Definition completed.")
-        printAndLog(self, "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Getting Tables Definition completed.")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
         #Get etc/hosts file
         self.hn0, self.hn1 = getHeadnodesHostnames(self)
-        printAndLog(self, "hn0: " + self.hn0)
-        printAndLog(self, "hn1: " + self.hn1)
+        printAndLog(self, "hn0: " + self.hn0, logLevel="DEBUG")
+        printAndLog(self, "hn1: " + self.hn1, logLevel="DEBUG")
         #Collect HiveSerevr2 logs
         #Collect HiveInteractiveServer logs
         #Collect Hive Metatsore logs
-        printAndLog(self, "-------------------------------")
-        printAndLog(self, "Getting Hive Server 2/Hive Metastore and Hive Interactive logs from both headnodes.")
-        printAndLog(self, "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Getting Hive Server 2/Hive Metastore and Hive Interactive logs from both headnodes.")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
         username = input("Whats your username?")
         password = pwinput.pwinput("Whats your password?", mask='*')
         getHiveLogs (self, username= username, password=password, host=self.hn0) # close your connection to hostname
@@ -145,9 +145,9 @@ class HDInsightQueryLogsCollector:
         #Compress results and display link to compressed file
         CompressFolder(self, "./results", "./results.zip")
 
-        printAndLog(self, "-------------------------------")    
-        printAndLog(self, "Results are saved in ./results.zip")
-        printAndLog(self, "-------------------------------")
+        printAndLog(self, Fore.GREEN + "-------------------------------")    
+        printAndLog(self, Fore.GREEN + "Results are saved in ./results.zip")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
         
 hnv = HDInsightQueryLogsCollector()
 if len(sys.argv) > 1:
