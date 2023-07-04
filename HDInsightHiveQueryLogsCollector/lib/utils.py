@@ -99,6 +99,7 @@ def getHiveInteractiveJDBCUrl(self):
 
     # Get the value of the property
     value = property_element.find('value').text
+    self.logger.debug(f"Hive Interactive JDBC URL: {value}")  
 
     return value
 

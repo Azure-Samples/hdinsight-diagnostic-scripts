@@ -5,15 +5,15 @@ import pysftp
 
 
 def executeHiveHql(self, hqlFile, outputfileName, getApplicationId = False):
-    hiveInteractiveJDBCUrl = getHiveInteractiveJDBCUrl(self)
+    self.hiveInteractiveJDBCUrl = getHiveInteractiveJDBCUrl(self)
 
-    if hiveInteractiveJDBCUrl == "":
+    if self.hiveInteractiveJDBCUrl == "":
         printAndLog(self, "Hive Interactive JDBC URL not found.", logLevel="Warning")
         command = "/usr/bin/hive"
         params = f"-n '' -p '' -f {hqlFile} > {outputfileName}"
     else:
         command = "/usr/bin/beeline"
-        params = f"-u '{hiveInteractiveJDBCUrl}' -n '' -p '' -f {hqlFile} > {outputfileName}"
+        params = f"-u '{self.hiveInteractiveJDBCUrl}' -n '' -p '' -f {hqlFile} > {outputfileName}"
 
     applicationId = ""
     result = executeCommand(command, params)
@@ -32,7 +32,18 @@ def generateHiveSetV(self):
     executeHiveQuery(self, 'set -v', "setV.out") 
 
 def executeHiveQuery(self, query, outputFileName):
-    executeCommand("/usr/bin/hive", "--outputformat=csv2 -n '' -p '' -e '{query}' > ./results/output/{outputFileName}".format(query=query, outputFileName=outputFileName)) 
+    self.hiveInteractiveJDBCUrl = getHiveInteractiveJDBCUrl(self)
+
+    if self.hiveInteractiveJDBCUrl == "":
+        printAndLog(self, "Hive Interactive JDBC URL not found, using default jdbc url", logLevel="Warning")
+        command = "/usr/bin/hive"
+        params = f"--outputformat=csv2 -n '' -p '' -e '{query}' > ./results/output/{outputFileName}".format(query=query, outputFileName=outputFileName)
+    else:
+        printAndLog(self, "Hive Interactive JDBC URL found, using it to connect to LLAP", "INFO")
+        command = "/usr/bin/beeline"
+        params = f"-u '{self.hiveInteractiveJDBCUrl}' --outputformat=csv2 -n '' -p '' -e '{query}' > ./results/output/{outputFileName}".format(query=query, outputFileName=outputFileName)
+
+    executeCommand(command, params) 
 
 def executeQueryExplain(self, query):
     queryWithoutUseSet = ""

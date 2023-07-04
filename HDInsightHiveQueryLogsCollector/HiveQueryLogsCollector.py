@@ -14,7 +14,7 @@ class HDInsightQueryLogsCollector:
     logger = ""
     executionStartTime = ""
     executionEndTime = ""
-    
+    hiveInteractiveJDBCUrl = ""
     def initializeLogger(self):
         """Initialize and return the logger object"""
         logger = logging.getLogger(__name__)
