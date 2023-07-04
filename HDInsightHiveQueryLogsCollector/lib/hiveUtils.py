@@ -116,6 +116,7 @@ def getHiveLogs(self, username, password, host):
 
 def GetLlapDetails(self):
     result = executeCommand("/usr/bin/yarn", "application -list -appTypes yarn-service -appStates RUNNING")
+    printAndLog(self, "result: " + result, logLevel="DEBUG")
     if "llap0" in result:
         return True, GetLlapAppId(result)
     else:
@@ -125,7 +126,9 @@ def GetLlapDetails(self):
 def GetLlapAppId(result):
     appId = ""
     for line in result.splitlines():
+        printAndLog(self, "line: " + line, logLevel="DEBUG")
         if "llap0" in line:
+
             appId = line.split()[0]
             break
     return appId
