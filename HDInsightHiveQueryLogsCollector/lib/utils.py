@@ -15,6 +15,7 @@ from colorama import *
 from halo import Halo
 
 from xml.etree.ElementTree import *
+import xml.etree.ElementTree as ET
 
 
 def initializeLogger(self):
@@ -86,6 +87,21 @@ def getHeadnodesHostnames(self):
         hn0 = hn_matches[0]
         hn1 = hn_matches[1]
     return hn0, hn1
+
+def getHiveInteractiveJDBCUrl(self):
+    """Get the Hive Interactive JDBC URL"""
+    # Parse the XML file
+    tree = ET.parse('/etc/hive/conf/beeline-site.xml')
+    root = tree.getroot()
+
+    # Find the property with name 'beeline.hs2.jdbc.url.llap'
+    property_element = root.find(".//property[name='beeline.hs2.jdbc.url.llap']")
+
+    # Get the value of the property
+    value = property_element.find('value').text
+
+    return value
+
 
 def printAndLog(self, msg, logLevel="INFO", end="x"):
     if msg != "\n":

@@ -5,9 +5,18 @@ import pysftp
 
 
 def executeHiveHql(self, hqlFile, outputfileName, getApplicationId = False):
+    hiveInteractiveJDBCUrl = getHiveInteractiveJDBCUrl(self)
+
+    if hiveInteractiveJDBCUrl == "":
+        printAndLog(self, "Hive Interactive JDBC URL not found.", logLevel="Warning")
+        command = "/usr/bin/hive"
+        params = f"-n '' -p '' -f {hqlFile} > {outputfileName}"
+    else:
+        command = "/usr/bin/beeline"
+        params = f"-u '{hiveInteractiveJDBCUrl}' -n '' -p '' -f {hqlFile} > {outputfileName}"
+
     applicationId = ""
-    params = f"-n '' -p '' -f {hqlFile} > {outputfileName}"
-    result = executeCommand("/usr/bin/hive", params)
+    result = executeCommand(command, params)
 
     if getApplicationId:
         applicationId = re.search("application_[0-9]{13}_[0-9]{4}", result)
