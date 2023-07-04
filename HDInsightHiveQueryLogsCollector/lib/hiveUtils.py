@@ -119,10 +119,12 @@ def GetLlapDetails(self):
     result = executeCommand("/usr/bin/yarn", f"application -list -appTypes yarn-service -appStates RUNNING > {yarnApplicationList_out}")
 
     f = open(yarnApplicationList_out,'r')
+    file_content = f.read()
+    f.close()
 
-    printAndLog(self, f"content of file  {yarnApplicationList_out}: " + f , logLevel="DEBUG")
-    if "llap0" in f:
-        return True, GetLlapAppId(f)
+    printAndLog(self, f"content of file  {yarnApplicationList_out}: " + file_content , logLevel="DEBUG")
+    if "llap0" in file_content:
+        return True, GetLlapAppId(file_content)
     else:
         return False, ""
 
