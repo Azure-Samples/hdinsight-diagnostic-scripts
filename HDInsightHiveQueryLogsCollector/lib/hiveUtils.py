@@ -115,10 +115,14 @@ def getHiveLogs(self, username, password, host):
 
 
 def GetLlapDetails(self):
-    result = executeCommand("/usr/bin/yarn", "application -list -appTypes yarn-service -appStates RUNNING")
-    printAndLog(self, "result: " + result, logLevel="DEBUG")
-    if "llap0" in result:
-        return True, GetLlapAppId(result)
+    yarnApplicationList_out = "./results/output/yarnApplicationList.out"
+    result = executeCommand("/usr/bin/yarn", f"application -list -appTypes yarn-service -appStates RUNNING > {yarnApplicationList_out}")
+
+    f = open(yarnApplicationList_out,'r')
+
+    printAndLog(self, f"content of file  {yarnApplicationList_out}: " + f , logLevel="DEBUG")
+    if "llap0" in f:
+        return True, GetLlapAppId(f)
     else:
         return False, ""
 
