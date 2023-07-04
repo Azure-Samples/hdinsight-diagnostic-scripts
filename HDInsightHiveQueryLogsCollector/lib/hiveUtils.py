@@ -129,7 +129,7 @@ def GetLlapDetails(self):
         return False, ""
 
 
-def GetLlapAppId(result):
+def GetLlapAppId(self, result):
     appId = ""
     for line in result.splitlines():
         printAndLog(self, "line: " + line, logLevel="DEBUG")
