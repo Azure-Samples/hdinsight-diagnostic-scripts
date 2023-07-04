@@ -124,7 +124,7 @@ def GetLlapDetails(self):
 
     printAndLog(self, f"content of file  {yarnApplicationList_out}: " + file_content , logLevel="DEBUG")
     if "llap0" in file_content:
-        return True, GetLlapAppId(file_content)
+        return True, GetLlapAppId(self,file_content)
     else:
         return False, ""
 
