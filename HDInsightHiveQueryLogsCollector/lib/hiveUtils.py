@@ -71,8 +71,8 @@ def executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet):
         saveTextToFile(self, result, f"./results/output/{table}_definition_beelinetrace.out")
 
 
-def getYarnApplicationLog(self, appId):
-    executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > ./results/logs/{appId}.log")
+def getYarnApplicationLog(self, appId, prefix=""):
+    executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > ./results/logs/{prefix}{appId}.log")
 
 def getHiveLogs(self, username, password, host):
     createFolder(self, f"./results/logs/{host}")
@@ -92,3 +92,20 @@ def getHiveLogs(self, username, password, host):
         sftp.get('/var/log/hive/hiveserver2Interactive.log', f'./results/logs/{host}/hiveserver2Interactive.log')
 
     sftp.close()   
+
+
+def GetLlapDetails(self):
+    result = executeCommand("/usr/bin/yarn", "application -list -appTypes yarn-service -appStates RUNNING")
+    if "llap0" in result:
+        return True, GetLlapAppId(result)
+    else:
+        return False, ""
+
+
+def GetLlapAppId(result):
+    appId = ""
+    for line in result.splitlines():
+        if "llap0" in line:
+            appId = line.split()[0]
+            break
+    return appId

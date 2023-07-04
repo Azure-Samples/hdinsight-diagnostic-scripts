@@ -106,6 +106,16 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, Fore.GREEN + "-------------------------------")
         printAndLog(self, Fore.GREEN + "Getting Yarn Application Log Completed.")
         printAndLog(self, Fore.GREEN + "-------------------------------")
+        # check if LLAP is running
+        isLlapRunning, llapAppId = GetLlapDetails(self)
+        printAndLog(self, Fore.YELLOW + "LLAP Running: " + Fore.GREEN + str(isLlapRunning))
+
+        printAndLog(self, Fore.GREEN + f"Getting Yarn Application Log for llap ...")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        getYarnApplicationLog(self, llapAppId, "llap_")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
+        printAndLog(self, Fore.GREEN + "Getting Yarn Application Log for llap Completed.")
+        printAndLog(self, Fore.GREEN + "-------------------------------")
         printAndLog(self, Fore.GREEN + "-------------------------------")
         printAndLog(self, Fore.GREEN + "Executing set V command ...")
         printAndLog(self, Fore.GREEN + "-------------------------------")
