@@ -23,7 +23,7 @@ def initializeLogger(self):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
 
-    fh = logging.FileHandler("./results/logs/logfile.log", "a")
+    fh = logging.FileHandler(f"{self.logsFolder}/logfile.log", "a")
     fh.setLevel(logging.DEBUG)
     formatter = logging.Formatter("%(asctime)s,%(msecs)d %(name)s %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
     fh.setFormatter(formatter)

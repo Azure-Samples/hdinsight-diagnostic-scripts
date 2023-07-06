@@ -16,6 +16,9 @@ class HDInsightQueryLogsCollector:
     executionEndTime = ""
     hiveInteractiveJDBCUrl = ""
     llapRunningStatus = "NAN"
+    resultSetFoldername = ""
+    outputFolder = ""
+    logsFolder = ""
 
     def initializeLogger(self):
         """Initialize and return the logger object"""
@@ -38,10 +41,13 @@ class HDInsightQueryLogsCollector:
         #       - logs
         #       - config
         #       - output
+        resultSetFoldername = datetime.today().strftime('%Y%m%d%H%M%S')
         createFolder(self, "results")
-        createFolder(self, "logs", "./results")
-        createFolder(self, "config", "./results")
-        createFolder(self, "output", "./results")
+        createFolder(self, resultSetFoldername, "./results")
+        createFolder(self, "logs", f"./results/{resultSetFoldername}")
+        createFolder(self, "output", f"./results/{resultSetFoldername}")
+        self.outputFolder = f"./results/{resultSetFoldername}/output"
+        self.logsFolder = f"./results/{resultSetFoldername}/logs"
 
 
 
@@ -83,7 +89,7 @@ class HDInsightQueryLogsCollector:
             except EOFError:
                 break
         
-        saveTextToFile(self, query, "./results/output/input_query.hql")
+        saveTextToFile(self, query, f"{self.outputFolder}/input_query.hql")
 
         # Execute the query
         printAndLog(self, Fore.GREEN + "-------------------------------")
@@ -91,8 +97,8 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, Fore.GREEN + "-------------------------------")
         
         self.executionStartTime = datetime.datetime.now()
-        result, appId = executeHiveHql(self, "./results/output/input_query.hql", "./results/output/query_result.out", getApplicationId=True)
-        saveTextToFile(self, result, "./results/output/query_beelinetrace.out")
+        result, appId = executeHiveHql(self, f"{self.outputFolder}/input_query.hql", f"{self.outputFolder}/query_result.out", getApplicationId=True)
+        saveTextToFile(self, result, f"{self.outputFolder}/query_beelinetrace.out")
         self.executionEndTime = datetime.datetime.now()
 
         printAndLog(self, "Execution Result:")
@@ -156,10 +162,10 @@ class HDInsightQueryLogsCollector:
         getHiveLogs (self, username= username, password=password, host=self.hn1) # close your connection to hostname
 
         #Compress results and display link to compressed file
-        CompressFolder(self, "./results", "./results.zip")
+        CompressFolder(self, f"./results/{self.resultSetFoldername}", f"./results_{self.resultSetFoldername}.zip")
 
         printAndLog(self, Fore.GREEN + "-------------------------------")    
-        printAndLog(self, Fore.GREEN + "Results are saved in ./results.zip")
+        printAndLog(self, Fore.GREEN + f"Results are saved as ./results_{self.resultSetFoldername}.zip")
         printAndLog(self, Fore.GREEN + "-------------------------------")
         
 hnv = HDInsightQueryLogsCollector()

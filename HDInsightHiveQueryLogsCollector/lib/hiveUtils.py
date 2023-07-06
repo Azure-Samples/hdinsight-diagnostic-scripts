@@ -37,13 +37,13 @@ def executeHiveQuery(self, query, outputFileName):
     
 
     if self.hiveInteractiveJDBCUrl == "":
-        printAndLog(self, "Hive Interactive JDBC URL not found, using default jdbc url", logLevel="Warning")
+        printAndLog(self, "Hive Interactive JDBC URL not found, using default jdbc url", logLevel="DEBUG")
         command = "/usr/bin/hive"
-        params = f"--outputformat=csv2 -n '' -p '' -e '{query}' > ./results/output/{outputFileName}".format(query=query, outputFileName=outputFileName)
+        params = f"--outputformat=csv2 -n '' -p '' -e '{query}' > {outputFolderName}/{outputFileName}".format(query=query,outputFolderName= self.outputFolder, outputFileName=outputFileName)
     else:
-        printAndLog(self, "Hive Interactive JDBC URL found, using it to connect to LLAP", "INFO")
+        printAndLog(self, "Hive Interactive JDBC URL found, using it to connect to LLAP", "DEBUG")
         command = "/usr/bin/beeline"
-        params = f"-u '{self.hiveInteractiveJDBCUrl}' --outputformat=csv2 -n '' -p '' -e '{query}' > ./results/output/{outputFileName}".format(query=query, outputFileName=outputFileName)
+        params = f"-u '{self.hiveInteractiveJDBCUrl}' --outputformat=csv2 -n '' -p '' -e '{query}' > {outputFolderName}/{outputFileName}".format(query=query, outputFolderName= self.outputFolder, outputFileName=outputFileName)
 
     executeCommand(command, params) 
 
@@ -72,9 +72,9 @@ def executeQueryExplain(self, query):
             explainQuery = f"{explainQuery};"
 
     # replace newline with spaces;
-    saveTextToFile(self, explainQuery, "./results/output/explain_query.hql")
-    result, appId = executeHiveHql(self, "./results/output/explain_query.hql", "./results/output/explain_query_result.out")
-    saveTextToFile(self, result, "./results/output/explain_query_beelinetrace.out")
+    saveTextToFile(self, explainQuery, f"{self.outputFolder}/explain_query.hql")
+    result, appId = executeHiveHql(self, f"{self.outputFolder}/explain_query.hql", f"{self.outputFolder}/explain_query_result.out")
+    saveTextToFile(self, result, f"{self.outputFolder}/explain_query_beelinetrace.out")
 
     return useStatement, queryWithoutUseSet, result
 
@@ -88,37 +88,37 @@ def executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet):
         if useStatement != "":
             query = f"{useStatement};{query}"
         
-        saveTextToFile(self, query, f"./results/output/{table}_definition.hql")
-        result, appId = executeHiveHql(self, f"./results/output/{table}_definition.hql", f"./results/output/{table}_dfinition.out")
-        saveTextToFile(self, result, f"./results/output/{table}_definition_beelinetrace.out")
+        saveTextToFile(self, query, f"{self.outputFolder}/{table}_definition.hql")
+        result, appId = executeHiveHql(self, f"{self.outputFolder}/{table}_definition.hql",f"{self.outputFolder}/{table}_dfinition.out")
+        saveTextToFile(self, result, f"{self.outputFolder}/{table}_definition_beelinetrace.out")
 
 
 def getYarnApplicationLog(self, appId, prefix=""):
-    executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > ./results/logs/{prefix}{appId}.log")
+    executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > f"{self.logsFolder}/{prefix}{appId}.log")
 
 def getHiveLogs(self, username, password, host):
-    createFolder(self, f"./results/logs/{host}")
+    createFolder(self, f"{self.logsFolder}/{host}")
     cnopts = pysftp.CnOpts()
     cnopts.hostkeys = None
     sftp = pysftp.Connection(self.hn0, username=username, password=password, cnopts= cnopts)
     if sftp.isfile('/var/log/hive/hiveserver2.log'):
         printAndLog(self, f"Getting file: /var/log/hive/hiveserver2.log from {host}")
-        sftp.get('/var/log/hive/hiveserver2.log', f'./results/logs/{host}/hiveserver2.log')
+        sftp.get('/var/log/hive/hiveserver2.log', f'{self.logsFolder}/{host}/hiveserver2.log')
 
     if sftp.isfile('/var/log/hive/hivemetastore.log'):
         printAndLog(self, f"Getting file: /var/log/hive/hivemetastore.log from {host}")
-        sftp.get('/var/log/hive/hivemetastore.log', f'./results/logs/{host}/hivemetastore.log')
+        sftp.get('/var/log/hive/hivemetastore.log', f'{self.logsFolder}/{host}/hivemetastore.log')
 
     if sftp.isfile('/var/log/hive/hiveserver2Interactive.log'):
         printAndLog(self, f"Getting file: /var/log/hive/hiveserver2Interactive.log from {host}")
-        sftp.get('/var/log/hive/hiveserver2Interactive.log', f'./results/logs/{host}/hiveserver2Interactive.log')
+        sftp.get('/var/log/hive/hiveserver2Interactive.log', f'{self.logsFolder}/{host}/hiveserver2Interactive.log')
 
     sftp.close()   
 
 
 def GetLlapDetails(self):
 
-    yarnApplicationList_out = "./results/output/yarnApplicationList.out"
+    yarnApplicationList_out = f"{self.outputFolder}/yarnApplicationList.out"
     result = executeCommand("/usr/bin/yarn", f"application -list -appTypes yarn-service -appStates RUNNING > {yarnApplicationList_out}")
 
     f = open(yarnApplicationList_out,'r')
