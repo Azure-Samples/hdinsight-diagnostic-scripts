@@ -5,10 +5,10 @@ import pysftp
 
 
 def executeHiveHql(self, hqlFile, outputfileName, getApplicationId = False):
-    self.hiveInteractiveJDBCUrl = getHiveInteractiveJDBCUrl(self)
+    if (self.llapRunningStatus == "NAN"):
+        self.hiveInteractiveJDBCUrl = getHiveInteractiveJDBCUrl(self)
 
     if self.hiveInteractiveJDBCUrl == "":
-        printAndLog(self, "Hive Interactive JDBC URL not found.", logLevel="Warning")
         command = "/usr/bin/hive"
         params = f"-n '' -p '' -f {hqlFile} > {outputfileName}"
     else:
@@ -32,7 +32,9 @@ def generateHiveSetV(self):
     executeHiveQuery(self, 'set -v', "setV.out") 
 
 def executeHiveQuery(self, query, outputFileName):
-    self.hiveInteractiveJDBCUrl = getHiveInteractiveJDBCUrl(self)
+    if (self.llapRunningStatus == "NAN"):
+        self.hiveInteractiveJDBCUrl = getHiveInteractiveJDBCUrl(self)
+    
 
     if self.hiveInteractiveJDBCUrl == "":
         printAndLog(self, "Hive Interactive JDBC URL not found, using default jdbc url", logLevel="Warning")
@@ -115,6 +117,7 @@ def getHiveLogs(self, username, password, host):
 
 
 def GetLlapDetails(self):
+
     yarnApplicationList_out = "./results/output/yarnApplicationList.out"
     result = executeCommand("/usr/bin/yarn", f"application -list -appTypes yarn-service -appStates RUNNING > {yarnApplicationList_out}")
 

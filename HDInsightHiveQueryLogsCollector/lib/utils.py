@@ -99,14 +99,18 @@ def getHiveInteractiveJDBCUrl(self):
 
     # Get the value of the property
     if (property_element is None):
+        printAndLog(self, "Hive Interactive JDBC URL not found.", logLevel="Warning")
+        self.llapRunningStatus = "Not Running"
         return ""
     
     value = property_element.find('value').text
     if value is None:
+        printAndLog(self, "Hive Interactive JDBC URL not found.", logLevel="Warning")
+        self.llapRunningStatus = "Not Running"
         return ""
     
     printAndLog(self, f"Hive Interactive JDBC URL: {value}", "DEBUG")  
-
+    self.llapRunningStatus = "Running"
     return value
 
 
