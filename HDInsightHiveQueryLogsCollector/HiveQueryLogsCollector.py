@@ -41,7 +41,7 @@ class HDInsightQueryLogsCollector:
         #       - logs
         #       - config
         #       - output
-        resultSetFoldername = datetime.now(datetime.timezone.utc).strftime('%Y%m%d%H%M%S')
+        resultSetFoldername = datetime.utcnow().strftime('%Y%m%d%H%M%S')
         createFolder(self, "results")
         createFolder(self, resultSetFoldername, "./results")
         createFolder(self, "logs", f"./results/{resultSetFoldername}")
