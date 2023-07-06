@@ -1,5 +1,5 @@
 import logging
-import datetime
+from datetime import datetime
 from lib.utils import *
 from lib.hiveUtils import *
 import pwinput
