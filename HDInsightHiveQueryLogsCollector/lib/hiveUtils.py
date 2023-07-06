@@ -39,11 +39,11 @@ def executeHiveQuery(self, query, outputFileName):
     if self.hiveInteractiveJDBCUrl == "":
         printAndLog(self, "Hive Interactive JDBC URL not found, using default jdbc url", logLevel="DEBUG")
         command = "/usr/bin/hive"
-        params = f"--outputformat=csv2 -n '' -p '' -e '{query}' > {outputFolderName}/{outputFileName}".format(query=query,outputFolderName= self.outputFolder, outputFileName=outputFileName)
+        params = f"--outputformat=csv2 -n '' -p '' -e '{query}' > {self.outputFolder}/{outputFileName}"
     else:
         printAndLog(self, "Hive Interactive JDBC URL found, using it to connect to LLAP", "DEBUG")
         command = "/usr/bin/beeline"
-        params = f"-u '{self.hiveInteractiveJDBCUrl}' --outputformat=csv2 -n '' -p '' -e '{query}' > {outputFolderName}/{outputFileName}".format(query=query, outputFolderName= self.outputFolder, outputFileName=outputFileName)
+        params = f"-u '{self.hiveInteractiveJDBCUrl}' --outputformat=csv2 -n '' -p '' -e '{query}' > {self.outputFolder}/{outputFileName}"
 
     executeCommand(command, params) 
 
