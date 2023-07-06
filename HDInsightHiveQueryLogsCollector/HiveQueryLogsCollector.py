@@ -41,13 +41,13 @@ class HDInsightQueryLogsCollector:
         #       - logs
         #       - config
         #       - output
-        resultSetFoldername = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+        self.resultSetFoldername = datetime.utcnow().strftime('%Y%m%d%H%M%S')
         createFolder(self, "results")
-        createFolder(self, resultSetFoldername, "./results")
-        createFolder(self, "logs", f"./results/{resultSetFoldername}")
-        createFolder(self, "output", f"./results/{resultSetFoldername}")
-        self.outputFolder = f"./results/{resultSetFoldername}/output"
-        self.logsFolder = f"./results/{resultSetFoldername}/logs"
+        createFolder(self, self.resultSetFoldername, "./results")
+        createFolder(self, "logs", f"./results/{self.resultSetFoldername}")
+        createFolder(self, "output", f"./results/{self.resultSetFoldername}")
+        self.outputFolder = f"./results/{self.resultSetFoldername}/output"
+        self.logsFolder = f"./results/{self.resultSetFoldername}/logs"
 
 
 
