@@ -94,7 +94,7 @@ def executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet):
 
 
 def getYarnApplicationLog(self, appId, prefix=""):
-    executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > f"{self.logsFolder}/{prefix}{appId}.log")
+    executeCommand("/usr/bin/yarn", f"logs -applicationId {appId} > {self.logsFolder}/{prefix}{appId}.log")
 
 def getHiveLogs(self, username, password, host):
     createFolder(self, f"{self.logsFolder}/{host}")
