@@ -98,6 +98,9 @@ def getHiveInteractiveJDBCUrl(self):
     property_element = root.find(".//property[name='beeline.hs2.jdbc.url.llap']")
 
     # Get the value of the property
+    if (property_element is None):
+        return ""
+    
     value = property_element.find('value').text
     if value is None:
         return ""
