@@ -1,5 +1,6 @@
 USE tpcds_orc;
 set hive.query.name=HDInsightHiveQueryLogsCollector;
+set hive.log.explain.output=true;
 
 with
     customer_total_return

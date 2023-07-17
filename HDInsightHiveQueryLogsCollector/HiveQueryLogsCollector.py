@@ -78,6 +78,19 @@ class HDInsightQueryLogsCollector:
         #which_validations = input()
         #if which_validations == "":
         #    which_validations = "1"
+        username = input("What is your ssh username?")
+
+        password1 = pwinput.pwinput("What is your ssh password?", mask='*')
+        password2 = pwinput.pwinput("Repeat your ssh password?", mask='*')
+
+        if password1 != password2:
+            printAndLog(self, Fore.RED + "Passwords do not match. Exiting...")
+            sys.exit(1)
+
+        #Get etc/hosts file
+        self.hn0, self.hn1 = getHeadnodesHostnames(self)
+        printAndLog(self, "hn0: " + self.hn0, logLevel="DEBUG")
+        printAndLog(self, "hn1: " + self.hn1, logLevel="DEBUG")
         
         printAndLog(self, "Enter/Paste your Query. When done type EOF to terminate the query: ")
         while True:
@@ -146,20 +159,17 @@ class HDInsightQueryLogsCollector:
         printAndLog(self, Fore.GREEN + "-------------------------------")
         printAndLog(self, Fore.GREEN + "Getting Tables Definition completed.")
         printAndLog(self, Fore.GREEN + "-------------------------------")
-        #Get etc/hosts file
-        self.hn0, self.hn1 = getHeadnodesHostnames(self)
-        printAndLog(self, "hn0: " + self.hn0, logLevel="DEBUG")
-        printAndLog(self, "hn1: " + self.hn1, logLevel="DEBUG")
+        
         #Collect HiveSerevr2 logs
         #Collect HiveInteractiveServer logs
         #Collect Hive Metatsore logs
         printAndLog(self, Fore.GREEN + "-------------------------------")
         printAndLog(self, Fore.GREEN + "Getting Hive Server 2/Hive Metastore and Hive Interactive logs from both headnodes.")
         printAndLog(self, Fore.GREEN + "-------------------------------")
-        username = input("Whats your username?")
-        password = pwinput.pwinput("Whats your password?", mask='*')
-        getHiveLogs (self, username= username, password=password, host=self.hn0) # close your connection to hostname
-        getHiveLogs (self, username= username, password=password, host=self.hn1) # close your connection to hostname
+        
+            
+        getHiveLogs (self, username= username, password=password1, host=self.hn0) # close your connection to hostname
+        getHiveLogs (self, username= username, password=password1, host=self.hn1) # close your connection to hostname
 
         #Compress results and display link to compressed file
         CompressFolder(self, f"./results/{self.resultSetFoldername}", f"./results_{self.resultSetFoldername}.zip")

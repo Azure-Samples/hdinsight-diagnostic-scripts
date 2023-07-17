@@ -75,43 +75,50 @@ def getHostName():
     return hostname.strip()
 
 def getHeadnodesHostnames(self):
-    hosts_file = open("/etc/hosts", "r")
-    hosts_content = hosts_file.read()
-    hosts_file.close()
-    #regex 
-    hn_matches = re.findall("\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}\s*(hn[02|01]-\w*)", hosts_content)
-    if hn_matches is None:
-        printAndLog(self,  "ERROR: Cannot find headnodes' hostnames in /etc/hosts file", "ERROR")
-        return "", ""
-    else:
-        hn0 = hn_matches[0]
-        hn1 = hn_matches[1]
-    return hn0, hn1
+    try:
+        hosts_file = open("/etc/hosts", "r")
+        hosts_content = hosts_file.read()
+        hosts_file.close()
+        #regex 
+        hn_matches = re.findall("\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}\s*(hn[02|01]-\w*)", hosts_content)
+        if hn_matches is None:
+            printAndLog(self,  "ERROR: Cannot find headnodes' hostnames in /etc/hosts file", "ERROR")
+            return "", ""
+        else:
+            hn0 = hn_matches[0]
+            hn1 = hn_matches[1]
+            return hn0, hn1
+    except Exception as e:
+        printAndLog(self, f"Error while getting headnodes names, make sure you are running the script on one of the headnodes: {e}", "ERROR")
+        sys.exit(1)
 
 def getHiveInteractiveJDBCUrl(self):
     """Get the Hive Interactive JDBC URL"""
     # Parse the XML file
-    tree = ET.parse('/etc/hive/conf/beeline-site.xml')
-    root = tree.getroot()
+    try:
+        tree = ET.parse('/etc/hive/conf/beeline-site.xml')
+        root = tree.getroot()
+        property_element = root.find(".//property[name='beeline.hs2.jdbc.url.llap']")
 
-    # Find the property with name 'beeline.hs2.jdbc.url.llap'
-    property_element = root.find(".//property[name='beeline.hs2.jdbc.url.llap']")
-
-    # Get the value of the property
-    if (property_element is None):
-        printAndLog(self, "Hive Interactive JDBC URL not found.", logLevel="Warning")
-        self.llapRunningStatus = "Not Running"
-        return ""
-    
-    value = property_element.find('value').text
-    if value is None:
-        printAndLog(self, "Hive Interactive JDBC URL not found.", logLevel="Warning")
-        self.llapRunningStatus = "Not Running"
-        return ""
-    
-    printAndLog(self, f"Hive Interactive JDBC URL: {value}", "DEBUG")  
-    self.llapRunningStatus = "Running"
-    return value
+        # Get the value of the property
+        if (property_element is None):
+            printAndLog(self, "Hive Interactive JDBC URL not found.", logLevel="Warning")
+            self.llapRunningStatus = "Not Running"
+            return ""
+        
+        value = property_element.find('value').text
+        if value is None:
+            printAndLog(self, "Hive Interactive JDBC URL not found.", logLevel="Warning")
+            self.llapRunningStatus = "Not Running"
+            return ""
+        
+        printAndLog(self, f"Hive Interactive JDBC URL: {value}", "DEBUG")  
+        self.llapRunningStatus = "Running"
+        return value
+    except FileNotFoundError as e:
+        printAndLog(self, f"Error while parsing the XML file, make sure you are running the script on one of the headnodes: {e}", "ERROR")
+        sys.exit(1)
+        
 
 
 def printAndLog(self, msg, logLevel="INFO", end="x"):
