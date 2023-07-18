@@ -159,7 +159,7 @@ def getHiveLogs(self, username, password, host):
             if sftp.isfile(file_path):
                 printAndLog(self, f"Getting file: {file_path} from {host}")
                 file_name = os.path.basename(file_path)
-                sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')et(file_path, f'{self.logsFolder}/{host}/{file_name}')
+                sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
 
     sftp.close()   
 
