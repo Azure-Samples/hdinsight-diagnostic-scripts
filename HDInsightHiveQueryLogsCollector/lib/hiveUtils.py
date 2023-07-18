@@ -79,18 +79,22 @@ def executeQueryExplain(self, query):
     return useStatement, queryWithoutUseSet, result
 
 def executeQueryTablesDefinition(self, useStatement, queryWithoutUseSet):
-    tables = Parser(queryWithoutUseSet).tables
-    for table in tables:
-        if table == "":
-            continue
-        table = table.replace("`", "")
-        query = f"DESCRIBE FORMATTED {table}"
-        if useStatement != "":
-            query = f"{useStatement};{query}"
-        
-        saveTextToFile(self, query, f"{self.outputFolder}/{table}_definition.hql")
-        result, appId = executeHiveHql(self, f"{self.outputFolder}/{table}_definition.hql",f"{self.outputFolder}/{table}_dfinition.out")
-        saveTextToFile(self, result, f"{self.outputFolder}/{table}_definition_beelinetrace.out")
+    try:
+            
+        tables = Parser(queryWithoutUseSet).tables
+        for table in tables:
+            if table == "":
+                continue
+            table = table.replace("`", "")
+            query = f"DESCRIBE FORMATTED {table}"
+            if useStatement != "":
+                query = f"{useStatement};{query}"
+            
+            saveTextToFile(self, query, f"{self.outputFolder}/{table}_definition.hql")
+            result, appId = executeHiveHql(self, f"{self.outputFolder}/{table}_definition.hql",f"{self.outputFolder}/{table}_dfinition.out")
+            saveTextToFile(self, result, f"{self.outputFolder}/{table}_definition_beelinetrace.out")
+    except Exception as e:
+        printAndLog(self, f"Error occurred while getting table definitions: {e}", logLevel="ERROR")
 
 
 def getYarnApplicationLog(self, appId, prefix=""):
