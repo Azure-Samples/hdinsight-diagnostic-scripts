@@ -101,17 +101,32 @@ def getHiveLogs(self, username, password, host):
     cnopts = pysftp.CnOpts()
     cnopts.hostkeys = None
     sftp = pysftp.Connection(self.hn0, username=username, password=password, cnopts= cnopts)
-    if sftp.isfile('/var/log/hive/hiveserver2.log'):
-        printAndLog(self, f"Getting file: /var/log/hive/hiveserver2.log from {host}")
-        sftp.get('/var/log/hive/hiveserver2.log', f'{self.logsFolder}/{host}/hiveserver2.log')
+    
+    result = sftp.execute(f"find /var/log/hive//hiveserver2Interactive.log* -newermt '{self.executionStartTime}' -type f -ls")
+    file_list = result.splitlines()
+    for file_path in file_list:
+        if sftp.isfile(file_path):
+            printAndLog(self, f"Getting file: {file_path} from {host}")
+            file_name = os.path.basename(file_path)
+            sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
 
-    if sftp.isfile('/var/log/hive/hivemetastore.log'):
-        printAndLog(self, f"Getting file: /var/log/hive/hivemetastore.log from {host}")
-        sftp.get('/var/log/hive/hivemetastore.log', f'{self.logsFolder}/{host}/hivemetastore.log')
+    
+    result = sftp.execute(f"find /var/log/hive//hivemetastore.log* -newermt '{self.executionStartTime}' -type f -ls")
+    file_list = result.splitlines()
+    for file_path in file_list:
+        if sftp.isfile(file_path):
+            printAndLog(self, f"Getting file: {file_path} from {host}")
+            file_name = os.path.basename(file_path)
+            sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
 
-    if sftp.isfile('/var/log/hive/hiveserver2Interactive.log'):
-        printAndLog(self, f"Getting file: /var/log/hive/hiveserver2Interactive.log from {host}")
-        sftp.get('/var/log/hive/hiveserver2Interactive.log', f'{self.logsFolder}/{host}/hiveserver2Interactive.log')
+    
+    result = sftp.execute(f"find /var/log/hive//hiveserver2.log* -newermt '{self.executionStartTime}' -type f -ls")
+    file_list = result.splitlines()
+    for file_path in file_list:
+        if sftp.isfile(file_path):
+            printAndLog(self, f"Getting file: {file_path} from {host}")
+            file_name = os.path.basename(file_path)
+            sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
 
     sftp.close()   
 
