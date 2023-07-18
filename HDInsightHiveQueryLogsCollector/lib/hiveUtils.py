@@ -107,8 +107,7 @@ def getHiveLogs(self, username, password, host):
     printAndLog(self, f"Executing command: {command} on {host}")
     result = sftp.execute(command)
     printAndLog(self, f"Result: {result}")
-    file_list = result.splitlines()
-    for file_path in file_list:
+    for file_path in result:
         if sftp.isfile(file_path):
             printAndLog(self, f"Getting file: {file_path} from {host}")
             file_name = os.path.basename(file_path)
@@ -120,7 +119,7 @@ def getHiveLogs(self, username, password, host):
     printAndLog(self, f"Executing command: {command} on {host}")
     result = sftp.execute(command)
     printAndLog(self, f"Result: {result}")
-    for file_path in file_list:
+    for file_path in result:
         if sftp.isfile(file_path):
             printAndLog(self, f"Getting file: {file_path} from {host}")
             file_name = os.path.basename(file_path)
@@ -132,8 +131,7 @@ def getHiveLogs(self, username, password, host):
     printAndLog(self, f"Executing command: {command} on {host}")
     result = sftp.execute(command)
     printAndLog(self, f"Result: {result}")
-    file_list = result.splitlines()
-    for file_path in file_list:
+    for file_path in result:
         if sftp.isfile(file_path):
             printAndLog(self, f"Getting file: {file_path} from {host}")
             file_name = os.path.basename(file_path)
