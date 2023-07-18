@@ -91,7 +91,7 @@ class HDInsightQueryLogsCollector:
         self.hn0, self.hn1 = getHeadnodesHostnames(self)
         printAndLog(self, "hn0: " + self.hn0, logLevel="DEBUG")
         printAndLog(self, "hn1: " + self.hn1, logLevel="DEBUG")
-        
+
         printAndLog(self, "Enter/Paste your Query. When done type EOF to terminate the query: ")
         while True:
             try:
@@ -113,6 +113,7 @@ class HDInsightQueryLogsCollector:
         result, appId = executeHiveHql(self, f"{self.outputFolder}/input_query.hql", f"{self.outputFolder}/query_result.out", getApplicationId=True)
         saveTextToFile(self, result, f"{self.outputFolder}/query_beelinetrace.out")
         self.executionEndTime = datetime.now()
+        printAndLog(self, Fore.RED + f"Execution started at: {self.executionStartTime} and finished on: {self.executionEndTime} and it took {self.executionEndTime - self.executionStartTime}")
 
         printAndLog(self, "Execution Result:")
         printAndLog(self, result, logLevel="DEBUG")
