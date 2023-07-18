@@ -102,7 +102,11 @@ def getHiveLogs(self, username, password, host):
     cnopts.hostkeys = None
     sftp = pysftp.Connection(self.hn0, username=username, password=password, cnopts= cnopts)
     
-    result = sftp.execute(f"find /var/log/hive//hiveserver2Interactive.log* -newermt '{self.executionStartTime}' -type f")
+    logFilename = "hiveserver2Interactive"
+    command = f"find /var/log/hive//{logFilename}.log* -newermt '{self.executionStartTime}' -type f"
+    printAndLog(self, f"Executing command: {command} on {host}")
+    result = sftp.execute(command)
+    printAndLog(self, f"Result: {result}")
     file_list = result.splitlines()
     for file_path in file_list:
         if sftp.isfile(file_path):
@@ -111,8 +115,11 @@ def getHiveLogs(self, username, password, host):
             sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
 
     
-    result = sftp.execute(f"find /var/log/hive//hivemetastore.log* -newermt '{self.executionStartTime}' -type f")
-    file_list = result.splitlines()
+    logFilename = "hivemetastore"
+    command = f"find /var/log/hive//{logFilename}.log* -newermt '{self.executionStartTime}' -type f"
+    printAndLog(self, f"Executing command: {command} on {host}")
+    result = sftp.execute(command)
+    printAndLog(self, f"Result: {result}")
     for file_path in file_list:
         if sftp.isfile(file_path):
             printAndLog(self, f"Getting file: {file_path} from {host}")
@@ -120,7 +127,11 @@ def getHiveLogs(self, username, password, host):
             sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
 
     
-    result = sftp.execute(f"find /var/log/hive//hiveserver2.log* -newermt '{self.executionStartTime}' -type f")
+    logFilename = "hiveserver2"
+    command = f"find /var/log/hive//{logFilename}.log* -newermt '{self.executionStartTime}' -type f"
+    printAndLog(self, f"Executing command: {command} on {host}")
+    result = sftp.execute(command)
+    printAndLog(self, f"Result: {result}")
     file_list = result.splitlines()
     for file_path in file_list:
         if sftp.isfile(file_path):
