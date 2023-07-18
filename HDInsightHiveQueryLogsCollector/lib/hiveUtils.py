@@ -107,23 +107,39 @@ def getHiveLogs(self, username, password, host):
     printAndLog(self, f"Executing command: {command} on {host}")
     result = sftp.execute(command)
     printAndLog(self, f"Result: {result}")
-    for file_path in result:
-        if sftp.isfile(file_path):
-            printAndLog(self, f"Getting file: {file_path} from {host}")
-            file_name = os.path.basename(file_path)
-            sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
-
+    error_messages = [line.decode().rstrip() for line in result if line.startswith(b'find:')]
+    if error_messages:
+        printAndLog(self, "Error occurred while running the find command:")
+        for error in error_messages:
+            printAndLog(self,error)
+    else:
+        # copy the list of file names
+        for file_path_bytes in result:
+            file_path = file_path_bytes.decode().rstrip()
+            if sftp.isfile(file_path):
+                printAndLog(self, f"Getting file: {file_path} from {host}")
+                file_name = os.path.basename(file_path)
+                sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
     
     logFilename = "hivemetastore"
     command = f"find /var/log/hive//{logFilename}.log* -newermt '{self.executionStartTime}' -type f"
     printAndLog(self, f"Executing command: {command} on {host}")
     result = sftp.execute(command)
     printAndLog(self, f"Result: {result}")
-    for file_path in result:
-        if sftp.isfile(file_path):
-            printAndLog(self, f"Getting file: {file_path} from {host}")
-            file_name = os.path.basename(file_path)
-            sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
+
+    error_messages = [line.decode().rstrip() for line in result if line.startswith(b'find:')]
+    if error_messages:
+        printAndLog(self, "Error occurred while running the find command:")
+        for error in error_messages:
+            printAndLog(self,error)
+    else:
+        # copy the list of file names
+        for file_path_bytes in result:
+            file_path = file_path_bytes.decode().rstrip()
+            if sftp.isfile(file_path):
+                printAndLog(self, f"Getting file: {file_path} from {host}")
+                file_name = os.path.basename(file_path)
+                sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
 
     
     logFilename = "hiveserver2"
@@ -131,11 +147,19 @@ def getHiveLogs(self, username, password, host):
     printAndLog(self, f"Executing command: {command} on {host}")
     result = sftp.execute(command)
     printAndLog(self, f"Result: {result}")
-    for file_path in result:
-        if sftp.isfile(file_path):
-            printAndLog(self, f"Getting file: {file_path} from {host}")
-            file_name = os.path.basename(file_path)
-            sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')
+    error_messages = [line.decode().rstrip() for line in result if line.startswith(b'find:')]
+    if error_messages:
+        printAndLog(self, "Error occurred while running the find command:")
+        for error in error_messages:
+            printAndLog(self,error)
+    else:
+        # copy the list of file names
+        for file_path_bytes in result:
+            file_path = file_path_bytes.decode().rstrip()
+            if sftp.isfile(file_path):
+                printAndLog(self, f"Getting file: {file_path} from {host}")
+                file_name = os.path.basename(file_path)
+                sftp.get(file_path, f'{self.logsFolder}/{host}/{file_name}')et(file_path, f'{self.logsFolder}/{host}/{file_name}')
 
     sftp.close()   
 
