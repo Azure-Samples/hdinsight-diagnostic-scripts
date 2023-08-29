@@ -1,8 +1,6 @@
 # HDInsight Hive Query Diagnostics Tool
 
 ## Table of Contents
-<li> <a href="#what">What is HiveQueryLogsCollector ?</a> 
-<li> <a href="#req">Requirements</a>
 <li> <a href="#usage">Usage</a>
 
 
