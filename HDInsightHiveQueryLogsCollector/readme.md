@@ -10,7 +10,7 @@
 To install and run HiveQueryLogsCollector:
 
 ```
-git clone https://github.com/mabushaireh/hdinsight-diagnostic-scripts.git
+git clone https://github.com/Azure-Samples/hdinsight-diagnostic-scripts
 cd hdinsight-diagnostic-scripts/HDInsightHiveQueryLogsCollector/
 sh +x setup.sh
 python3 HiveQueryLogsCollector.py
