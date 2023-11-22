@@ -1,4 +1,5 @@
 USE tpcds_parquet;
+set parquet.memory.min.chunk.size=524288;
 
 drop table if exists store_sales;
 
